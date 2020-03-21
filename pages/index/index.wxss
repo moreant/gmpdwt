@@ -1,0 +1,36 @@
+/*主体页面布局,两边留白*/
+body {
+  margin: 0rpx 10rpx 25rpx 25rpx;
+}
+
+/*fLew水平布局*/
+.flex-row {
+  display: flex;
+  flex-direction: row;
+}
+
+/*未激活按钮*/
+.btn {
+  display: inline-block;
+  padding: 9.6rpx 16rpx;
+  background-image: linear-gradient(#ddd, #bbb);
+  border: 2rpx solid rgba(0, 0, 0, .2);
+  border-radius: 9.6rpx;
+  text-align: center;
+  color: white;
+  font-weight: bold;
+  width: 100rpx;
+}
+
+/*按钮激活状态*/
+.active { 
+  background: #bbb;  
+}
+
+/*尾部样式*/
+.foot {
+  text-align: center;
+  font-family: SimSun;
+  font-size: 40rpx;
+  background-color: lightgray;
+}
