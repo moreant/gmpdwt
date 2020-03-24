@@ -6,9 +6,11 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "07180935莫奕基-4",
+    "navigationBarTitleText": "Hello",
     "navigationBarTextStyle": "black"
+  },  
+  "usingComponents": {
+    "van-button": "@vant/weapp/button"
   },
-  "style": "v2",
   "sitemapLocation": "sitemap.json"
 }
