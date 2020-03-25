@@ -18,7 +18,7 @@ Page({
     const reg = /\+|\-|\×|\÷|\%|\^|√|sin|cos/g
     const nums = show.split(reg).map(x => x - 0)
     const calculates = show.match(reg)
-    // 如果运算符后接着运算符 还有改进空间，但我不想弄了
+    // 如果运算符后接着运算符，就替换新的。应该还有改进空间，但没时间看了。
     if (
       nums[nums.length - 1] === nums[nums.length - 2] &&
       nums[nums.length - 1] === 0 &&
@@ -34,22 +34,16 @@ Page({
         show: newShow
       })
     }
-    this.setData({
-      nums,
-      calculates
-    })
     // 是否符合计算条件
     if (nums.length > 1 && nums[nums.length - 1] !== 0) {
       this.setData({        
-        output: this.cal()
+        output: this.cal(nums,calculates)
       })
     }
   },
 
   // 计算字符串 暴力 if 解决
-  cal() {
-    const nums = this.data.nums
-    const calculates = this.data.calculates
+  cal(nums,calculates) {  
     var len = nums.length
     var index
     if (len > 1 && nums[1] !== "") {
