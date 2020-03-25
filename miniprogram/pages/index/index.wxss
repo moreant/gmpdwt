@@ -1,0 +1,30 @@
+.display {
+  text-align: right;
+  padding: 24rpx;
+  font-size: 2em;
+}
+
+.second {
+  font-size: 1.5em;
+}
+
+.first {
+ /* color: #606266;  */
+  font-size: 2em;
+}
+
+/* .van-col{
+  height: 100rpx;
+} */
+.van-button--default {
+  height: 120rpx !important;
+  font-size: 1.5em !important;
+}
+
+page {
+  color: #303133;
+  background-color: #e1f3d8;
+  height: 100%;
+  display: flex;
+  flex-direction: column-reverse;
+}

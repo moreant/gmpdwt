@@ -1,1 +1,90 @@
-<van-button type="default">Hello Vant!</van-button>
+<!-- 按钮组 -->
+<view class="btn-grop">
+	<van-row>
+		<van-col span="6">
+			<van-button type="default" block bindtap="input" id="^">乘方</van-button>
+		</van-col>
+		<van-col span="6">
+			<van-button type="default" block bindtap="input" id="√" style="font-size:0.9em;">平方根</van-button>
+		</van-col>
+		<van-col span="6">
+			<van-button type="default" block bindtap="input" id="sin">sin</van-button>
+		</van-col>
+		<van-col span="6">
+			<van-button type="default" block bindtap="input" id="cos">cos</van-button>
+		</van-col>
+	</van-row>
+	<van-row>
+		<van-col span="6">
+			<van-button type="default" bindtap="clear" block>C</van-button>
+		</van-col>
+		<van-col span="6">
+			<van-button type="default" bindtap="del" block>DEL</van-button>
+		</van-col>
+		<van-col span="6">
+		<!-- 按钮使用 id 传值 -->
+			<van-button type="default" block bindtap="input" id="%">%</van-button>
+		</van-col>
+		<van-col span="6">
+			<van-button type="default" block bindtap="input" id="÷">÷</van-button>
+		</van-col>
+	</van-row>
+	<van-row>
+		<van-col span="6">
+			<van-button type="default" block bindtap="input" id="7">7</van-button>
+		</van-col>
+		<van-col span="6">
+			<van-button type="default" block bindtap="input" id="8">8</van-button>
+		</van-col>
+		<van-col span="6">
+			<van-button type="default" block bindtap="input" id="9">9</van-button>
+		</van-col>
+		<van-col span="6">
+			<van-button type="default" block bindtap="input" id="×">×</van-button>
+		</van-col>
+	</van-row>
+	<van-row>
+		<van-col span="6">
+			<van-button type="default" block bindtap="input" id="4">4</van-button>
+		</van-col>
+		<van-col span="6">
+			<van-button type="default" block bindtap="input" id="5">5</van-button>
+		</van-col>
+		<van-col span="6">
+			<van-button type="default" block bindtap="input" id="6">6</van-button>
+		</van-col>
+		<van-col span="6">
+			<van-button type="default" block bindtap="input" id="-">－</van-button>
+		</van-col>
+	</van-row>
+	<van-row>
+		<van-col span="6">
+			<van-button type="default" block bindtap="input" id="1">1</van-button>
+		</van-col>
+		<van-col span="6">
+			<van-button type="default" block bindtap="input" id="2">2</van-button>
+		</van-col>
+		<van-col span="6">
+			<van-button type="default" block bindtap="input" id="3">3</van-button>
+		</van-col>
+		<van-col span="6">
+			<van-button type="default" block bindtap="input" id="+">+</van-button>
+		</van-col>
+	</van-row>
+	<van-row>
+		<van-col span="12">
+			<van-button type="default" block bindtap="input" id="0">0</van-button>
+		</van-col>
+		<van-col span="6">
+			<van-button type="default" block bindtap="input" id=".">.</van-button>
+		</van-col>
+		<van-col span="6">
+			<van-button type="default" block>=</van-button>
+		</van-col>
+	</van-row>
+</view>
+<!-- 显示区 -->
+<view class="display">
+	<view><text class="first" id="first">{{show}}</text></view>
+	<view><text class="second" id="second">{{output == 0 ? 0 :'= '+output}}</text></view>
+</view>

@@ -5,12 +5,14 @@
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "Hello",
+    "navigationBarBackgroundColor": "#e1f3d8",
+    "navigationBarTitleText": "07180935",
     "navigationBarTextStyle": "black"
   },  
   "usingComponents": {
-    "van-button": "@vant/weapp/button"
+    "van-button": "@vant/weapp/button",
+    "van-row": "@vant/weapp/row",
+    "van-col": "@vant/weapp/col"
   },
   "sitemapLocation": "sitemap.json"
 }
