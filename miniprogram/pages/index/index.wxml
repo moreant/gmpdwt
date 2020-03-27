@@ -1,90 +1,38 @@
-<!-- 按钮组 -->
-<view class="btn-grop">
-	<van-row>
-		<van-col span="6">
-			<van-button type="default" block bindtap="input" id="^">乘方</van-button>
-		</van-col>
-		<van-col span="6">
-			<van-button type="default" block bindtap="input" id="√" style="font-size:0.9em;">平方根</van-button>
-		</van-col>
-		<van-col span="6">
-			<van-button type="default" block bindtap="input" id="sin">sin</van-button>
-		</van-col>
-		<van-col span="6">
-			<van-button type="default" block bindtap="input" id="cos">cos</van-button>
-		</van-col>
-	</van-row>
-	<van-row>
-		<van-col span="6">
-			<van-button type="default" bindtap="clear" block>C</van-button>
-		</van-col>
-		<van-col span="6">
-			<van-button type="default" bindtap="del" block>DEL</van-button>
-		</van-col>
-		<van-col span="6">
-		<!-- 按钮使用 id 传值 -->
-			<van-button type="default" block bindtap="input" id="%">%</van-button>
-		</van-col>
-		<van-col span="6">
-			<van-button type="default" block bindtap="input" id="÷">÷</van-button>
-		</van-col>
-	</van-row>
-	<van-row>
-		<van-col span="6">
-			<van-button type="default" block bindtap="input" id="7">7</van-button>
-		</van-col>
-		<van-col span="6">
-			<van-button type="default" block bindtap="input" id="8">8</van-button>
-		</van-col>
-		<van-col span="6">
-			<van-button type="default" block bindtap="input" id="9">9</van-button>
-		</van-col>
-		<van-col span="6">
-			<van-button type="default" block bindtap="input" id="×">×</van-button>
-		</van-col>
-	</van-row>
-	<van-row>
-		<van-col span="6">
-			<van-button type="default" block bindtap="input" id="4">4</van-button>
-		</van-col>
-		<van-col span="6">
-			<van-button type="default" block bindtap="input" id="5">5</van-button>
-		</van-col>
-		<van-col span="6">
-			<van-button type="default" block bindtap="input" id="6">6</van-button>
-		</van-col>
-		<van-col span="6">
-			<van-button type="default" block bindtap="input" id="-">－</van-button>
-		</van-col>
-	</van-row>
-	<van-row>
-		<van-col span="6">
-			<van-button type="default" block bindtap="input" id="1">1</van-button>
-		</van-col>
-		<van-col span="6">
-			<van-button type="default" block bindtap="input" id="2">2</van-button>
-		</van-col>
-		<van-col span="6">
-			<van-button type="default" block bindtap="input" id="3">3</van-button>
-		</van-col>
-		<van-col span="6">
-			<van-button type="default" block bindtap="input" id="+">+</van-button>
-		</van-col>
-	</van-row>
-	<van-row>
-		<van-col span="12">
-			<van-button type="default" block bindtap="input" id="0">0</van-button>
-		</van-col>
-		<van-col span="6">
-			<van-button type="default" block bindtap="input" id=".">.</van-button>
-		</van-col>
-		<van-col span="6">
-			<van-button type="default" block>=</van-button>
-		</van-col>
-	</van-row>
-</view>
-<!-- 显示区 -->
-<view class="display">
-	<view><text class="first" id="first">{{show}}</text></view>
-	<view><text class="second" id="second">{{output == 0 ? 0 :'= '+output}}</text></view>
-</view>
+<form class="weui-form" bindsubmit="submit" bindreset="reset">
+	<view class="weui-form__text-area">
+		<h2 class="weui-form__title">财产诉讼费计算器</h2>
+	</view>
+	<view class="weui-form__control-area">
+		<view class="weui-cells__group weui-cells__group_form">
+		<!-- 外星人按钮 -->
+			<view class="weui-cell weui-cell_active weui-cell_switch">
+				<view class="weui-cell__bd">是否外星人</view>
+				<view class="weui-cell__ft">
+					<label class="weui-switch-cp">
+					<!-- 变化时触发 ufo 事件  -->
+						<switch class="weui-switch-cp__input" bindchange="ufo" />
+						<view class="weui-switch-cp__box"></view>
+					</label>
+				</view>
+			</view>
+			<view class="weui-cells__title">财产标的金额（单位元）</view>
+			<view class="weui-cells weui-cells_form">
+				<view class="weui-cell weui-cell_active">
+					<view class="weui-cell__hd"><label class="weui-label">金额</label></view>
+					<view class="weui-cell__bd">
+						<input class="weui-input" type="number" placeholder="请填入财产标的金额" placeholder-class="weui-input__placeholder" name="money" />
+					</view>
+				</view>
+			</view>
+			<view class="weui-cells__tips">
+				<view class="weui-form__desc" style=" color: #303133;">诉讼费：<text style="float:right">￥{{fei1}}</text></view>
+				<view class="weui-form__desc" style=" color: #303133;">减半收取：<text style="float:right">￥{{fei2}}</text></view>
+			</view>
+		</view>
+	</view>
+
+	<view class="weui-form__control-area">
+		<button form-type="submit" class="weui-btn weui-btn_primary">计算</button>
+		<button form-type="reset" class="weui-btn weui-btn_default">重置</button>
+	</view>
+</form>

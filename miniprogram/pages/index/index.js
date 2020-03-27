@@ -1,117 +1,55 @@
-//index.js
+// ufo 全局变量
+var ufo = false;
 
 Page({
-  // 处理输入事件
-  input(e) {
-    const input = e.currentTarget.id
-    const show = this.data.show + input
+  submit(e) {
+    const money = e.detail.value.money - 0
+    var ssf = 0;
+    if (money <= 10000) {
+      ssf = 50;
+    } else if (money <= 100000 && money > 10000) {
+      ssf = (0.025 * money - 200);
+    } else if (money <= 200000 && money > 100000) {
+      ssf = 0.02 * money + 300;
+    } else if (money <= 500000 && money > 200000) {
+      ssf = 0.015 * money + 1300;
+    } else if (money <= 1000000 && money > 500000) {
+      ssf = 0.01 * money + 3800;
+    } else if (money <= 2000000 && money > 1000000) {
+      ssf = 0.009 * money + 4800;
+    } else if (money <= 5000000 && money > 2000000) {
+      ssf = 0.008 * money + 6800;
+    } else if (money <= 10000000 && money > 5000000) {
+      ssf = 0.007 * money + 11800;
+    } else if (money <= 20000000 && money > 10000000) {
+      ssf = 0.006 * money + 21800;
+    } else if (money > 20000000) {
+      ssf = 0.005 * money + 41800;
+    }
+    // 如果外星人开关开启，诉讼费双倍 
+    if (ufo) {
+      ssf *= 2
+    }
     this.setData({
-      show
+      fei1: ssf.toFixed(2),
+      fei2: (ssf * 0.5).toFixed(2)
     })
-    this.inputOver()
   },
-  // 输入完成
-  inputOver() {
-    const show = this.data.show
-    // 从输入的字符串中提取信息
-    // const other = /\^|√|sin|cos/g
-    const reg = /\+|\-|\×|\÷|\%|\^|√|sin|cos/g
-    const nums = show.split(reg).map(x => x - 0)
-    const calculates = show.match(reg)
-    // 如果运算符后接着运算符，就替换新的。应该还有改进空间，但没时间看了。
-    if (
-      nums[nums.length - 1] === nums[nums.length - 2] &&
-      nums[nums.length - 1] === 0 &&
-      calculates[calculates.length - 1] !== '√' &&
-      calculates[calculates.length - 1] !== '^' &&
-      calculates[calculates.length - 1] !== 'sin' &&
-      calculates[calculates.length - 1] !== 'cos'
-    ) {
-      var newShow = show.split('')
-      newShow.splice(-2, 1)
-      newShow = newShow.join('')
-      this.setData({
-        show: newShow
-      })
-    }
-    // 是否符合计算条件
-    if (nums.length > 1 && nums[nums.length - 1] !== 0) {
-      this.setData({        
-        output: this.cal(nums,calculates)
-      })
-    }
+  // 外星人开关时间处理
+  ufo(e) {
+    ufo = e.detail.value
   },
-
-  // 计算字符串 暴力 if 解决
-  cal(nums,calculates) {  
-    var len = nums.length
-    var index
-    if (len > 1 && nums[1] !== "") {
-      if (calculates.indexOf('sin') !== -1) {
-        index = calculates.indexOf('sin')
-        nums.splice(index, 2, Math.sin(nums[index + 1]))
-      } else if (calculates.indexOf('cos') !== -1) {
-        index = calculates.indexOf('cos')
-        nums.splice(index, 2, Math.cos(nums[index + 1]))
-      } else if (calculates.indexOf('√') !== -1) {
-        index = calculates.indexOf('√')
-        nums.splice(index, 2, Math.sqrt(nums[index + 1]))
-      } else if (calculates.indexOf('^') !== -1) {
-        index = calculates.indexOf('^')
-        nums.splice(index, 2, Math.pow(nums[index], nums[index + 1]))
-      } else if (calculates.indexOf('%') !== -1) {
-        index = calculates.indexOf('%')
-        nums.splice(index, 2, nums[index] % nums[index + 1])
-      } else if (calculates.indexOf('×') !== -1) {
-        // 注意是 × 不是 X
-        index = calculates.indexOf('×')
-        nums.splice(index, 2, nums[index] * nums[index + 1])
-      } else if (calculates.indexOf('÷') !== -1) {
-        index = calculates.indexOf('÷')
-        nums.splice(index, 2, nums[index] / nums[index + 1])
-      } else if (calculates.indexOf('-') !== -1) {
-        index = calculates.indexOf('-')
-        nums.splice(index, 2, nums[index] - nums[index + 1])
-      } else if (calculates.indexOf('+') !== -1) {
-        index = calculates.indexOf('+')
-        nums.splice(index, 2, nums[index] + nums[index + 1])
-      }
-    }
-    console.log(nums);
-    // 删除计算完的运算符
-    calculates.splice(index, 1)
-    // 没算完就递归
-    if (nums.length > 1) {
-      this.cal(nums, calculates)
-    }
-    // 算完输出
-    return nums[0]
-  },
-
-  // 处理删除事件
-  del() {
-    const strings = this.data.show.split('')
-    strings.pop()
+  reset(e) {
+    console.log(2);
     this.setData({
-      show: strings.join('')
-    })
-    // 删除完成
-    this.inputOver()
-  },
-  // 处理清除事件
-  clear() {
-    this.setData({
-      nums: '',
-      calculates: '',
-      show: '',
-      output: '0',
+      fei1: 0,
+      fei2: 0
     })
   },
   data: {
-    nums: '',
-    calculates: '',
-    show: '',
-    output: '0',
+    ufo: false,
+    fei1: 0,
+    fei2: 0,
   },
 
   onLoad: function () {}
