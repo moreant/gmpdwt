@@ -1,0 +1,5 @@
+<!--pages/ld/ld.wxml-->
+<view>
+  <image src="../../images/lxl.jpg" />
+</view>
+<text>党委书记 蓝祥龙</text>

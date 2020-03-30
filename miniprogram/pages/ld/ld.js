@@ -1,10 +1,6 @@
-// pages/index/index.js
+// pages/ld/ld.js
 Page({
-  phone(e) {
-    wx.makePhoneCall({
-      phoneNumber: '020-36552428',
-    })
-  },
+
   /**
    * 页面的初始数据
    */

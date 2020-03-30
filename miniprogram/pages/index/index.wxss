@@ -1,7 +1,1 @@
-page,
-.weui-form,
-.weui-cell {
-  color: #303133;
-  background-color: #e1f3d8 !important;
-  height: 100%;
-}
+/* pages/index/index.wxss */

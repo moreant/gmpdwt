@@ -1,31 +1,20 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/divorce/divorce",
-    "pages/logs/logs"
+    "pages/case/case",
+    "pages/map/map",
+    "pages/person/person",
+    "pages/ld/ld",
+    "pages/fc/fc"
   ],
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#e1f3d8",
-    "navigationBarTitleText": "07180935",
+    "navigationBarTitleText": "07180935莫奕基",
     "navigationBarTextStyle": "black"
   },
-  "tabBar": {
-    "list": [{
-      "pagePath": "pages/index/index",
-      "text": "财产",
-      "iconPath": "images/m2.png",
-      "selectedIconPath": "images/m1.png"
-    }, {
-      "pagePath": "pages/divorce/divorce",
-      "text": "离婚",
-      "iconPath": "images/n2.png",
-      "selectedIconPath": "images/n1.png"
-    }]
-  },
   "usingComponents": {
-    "van-field": "@vant/weapp/field/index",
-    "van-button": "@vant/weapp/button/index"
+  
   },
   "sitemapLocation": "sitemap.json"
 }

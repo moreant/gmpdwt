@@ -1,32 +1,29 @@
-// pages/index/divorce/divorce.js
+// pages/map/map.js
 Page({
-  submit(e) {
-    const money = e.detail.value.money - 0
-    this.setData({
-      fei1: (money * 0.05).toFixed(2),
-      fei2: (money * 0.025).toFixed(2)
-    })
 
-  },
-  property(e) {
-    this.setData({
-      property: e.detail.value
-    })
-  },
-  reset(e) {
-    this.setData({
-      property: true,
-      fei1: 300,
-      fei2: 150
-    })
-  },
   /**
    * 页面的初始数据
    */
   data: {
-    property: false,
-    fei1: 300,
-    fei2: 150,
+    markers: [{
+      iconPath: "../../images/mark.png",
+      id: 0,
+      latitude: "23.387089",
+      longitude: "113.446069",
+      title: '图文楼',
+      label:{
+        content:'图文楼'
+      }
+    }, {
+      iconPath: "../../images/mark.png",
+      id: 0,
+      latitude: "23.380451",
+      longitude: "113.444820",
+      title: '西门',
+      label:{
+        content:'西门'
+      }
+    }]
   },
 
   /**
