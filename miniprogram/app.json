@@ -1,15 +1,10 @@
 {
   "pages": [
-    "pages/index/index",
-    "pages/case/case",
-    "pages/map/map",
-    "pages/person/person",
-    "pages/ld/ld",
-    "pages/fc/fc"
+    "pages/index/index"    
   ],
   "window": {
     "backgroundTextStyle": "light",
-    "navigationBarBackgroundColor": "#e1f3d8",
+    "navigationBarBackgroundColor": "#fff",
     "navigationBarTitleText": "07180935莫奕基",
     "navigationBarTextStyle": "black"
   },

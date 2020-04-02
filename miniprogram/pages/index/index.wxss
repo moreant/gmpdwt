@@ -1,1 +1,58 @@
-/* pages/index/index.wxss */
+page {
+  height: 100% !important;
+  display: flex;
+  flex-direction: column;
+  color: #303133;
+}
+
+.weather {
+  text-align: center !important;
+}
+
+.list {
+  margin-top: auto;
+}
+
+.date {
+  color: #969799;
+}
+
+.city {
+  margin-top: 24rpx;
+  font-size: 2rem;
+}
+
+.wea {
+  margin-top: 24rpx;
+  display: flex;
+  justify-content: center;
+}
+
+.weabod {
+  margin-left: 24rpx;
+  text-align: left;
+}
+
+.weaimg {
+  width: 120rpx;
+  height: 120rpx;
+  border-radius: 20rpx;
+  background-color: #0084ff;
+  align-self: center!important;
+}
+
+.air_tips {
+  color: #969799;
+  padding: 48rpx 160rpx;
+}
+
+.tem {
+  font-size: 4rem;
+}
+
+.footer {
+  margin: 24rpx 0 ;
+  color: #969799;
+  font-size: 0.75rem;
+  text-align: center !important;
+}

@@ -1,59 +1,38 @@
-<import src="../template/template.wxml" />
-<view class="page">
-  <!--页头-->
-  <template is="header" />
-  <!--设置展示图标-->
-  <view class="body">
-    <view class="left">
-      <view class="l1">
-        <navigator url="../person/person">
-          <image class="pic1" src="../../images/1.png" />
-        </navigator>
-      </view>
-      <view class="l2">
-        <text>学院简介</text>
-      </view>
-      <view class="l3">
-        <navigator url="../map/map">
-          <image class="pic1" src="../../images/3.png" />
-        </navigator>
-      </view>
-      <view class="l4">
-        <text>地图导航</text>
-      </view>
-      <!-- <view class="l3">
-        <navigator url="../ld/ld">
-          <image class="pic1" src="https://img.icons8.com/officel/64/000000/contacts.png" />
-        </navigator>
-      </view>
-      <view class="l4">
-        <text>现任领导</text>
-      </view> -->
-    </view>
-    <view class="right">
-      <view class="l1">
-        <navigator url="../case/case">
-          <image class="pic1" src="../../images/2.png" />
-        </navigator>
-      </view>
-      <view class="l2">
-        <text>学院视频</text>
-      </view>
-      <view class="l3" bindtap="phone">
-        <image class="pic1" src="../../images/4.png" />
-      </view>
-      <view class="l4">
-        <text>联系方式</text>
-      </view>
-      <!-- <view class="l3">
-        <navigator url="../fc/fc">
-        <image class="pic1" src="https://img.icons8.com/officel/64/000000/picture.png" />
-        </navigator>
-      </view>
-      <view class="l4">
-        <text>学院风采</text>
-      </view>-->
-    </view> 
+<van-search value="{{ value }}" input-align="center" placeholder="请输入城市" bind:search="search" />
+
+<view class="weather">
+  <view class="date">
+    <text>{{data[0].date || '加载中' }} - {{data[0].week || '加载中'}}</text>
   </view>
-  <template is="footer" />
+  <view class="city">
+    <text>{{city}}</text>
+  </view>
+  <view>
+    <text class="tem">{{data[0].tem || '加载中'}}</text>
+  </view>
+  <view class="wea">
+    <image class="weaimg" src="/images/{{data[0].wea_img || 'qing'}}.png" style />
+    <view class="weabod">
+      <view>{{data[0].wea || '加载中'}}</view>
+      <view class="win-air">
+        <text>{{data[0].win[0] || '加载中'}} {{data[0].win_speed || '加载中'}}</text>
+      </view>
+      <view>空气{{data[0].air_level || '加载中'}} 空气质量{{data[0].air || '加载中'}}</view>
+    </view>
+  </view>
+  <view class="air_tips">
+    <text>{{data[0].air_tips || '加载中'}}</text>
+  </view>
+</view>
+<view class="list">
+  <van-cell
+    wx:for="{{data || '加载中'}}"
+    wx:key="day"
+    title="{{item.day || '加载中'}}"
+    value="{{item.tem1 || '加载中'}} / {{item.tem2 || '加载中'}}"
+    size="large"
+    label="{{item.wea || '加载中'}}"
+    is-link
+  />
+  <view class="footer">数据来自天气API www.tianqiapi.com</view>
 </view>
