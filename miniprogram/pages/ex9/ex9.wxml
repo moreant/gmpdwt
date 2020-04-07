@@ -1,0 +1,38 @@
+<view class="page">
+  <view class="nav">
+    <view bindtap="click1" class="{{nav1}}">
+      <text>收入</text>
+    </view>
+    <view bindtap="click2" class="{{nav2}}">
+      <text>支出</text>
+    </view>
+  </view>
+  <view class="body">
+    <!--收入开始-->
+    <view wx:if="{{condition1}}">
+      <view class="list1" wx:for="{{array}}" wx:key="this">
+        {{item}}
+      </view>
+    </view>
+    <!--收入结尾-->
+    <!--支出开始-->
+    <view wx:if="{{condition2}}" class="finish">
+      <view class="list2" wx:for="{{array1}}" wx:key="this">
+        {{item}}
+      </view>
+    </view>
+    <!--支出结尾-->
+    <!--输入框增加-->
+    <view class="btn">
+      <button bindtap="click" type="primary">增加</button>
+    </view>
+    <view class="area" wx:if="{{input}}">
+      <input bindconfirm="confirm" confirm-type="done" 
+      placeholder="输入{{condition1?'收入':'支出'}}金额" />
+    </view>
+  </view>
+</view>
+  <!-- 底部汇总栏 -->
+  <view class="total">
+    收入:{{income}} 支出:{{pay}} 余额:{{income-pay}}
+  </view>

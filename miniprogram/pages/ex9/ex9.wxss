@@ -1,0 +1,53 @@
+.page {
+  margin: 0rpx 50rpx 50rpx 50rpx;
+  text-align: center;
+}
+.nav {
+  display: flex;
+  flex-direction: row;
+  font-size: 70rpx;
+}
+.nav1 {
+  flex: 1;
+  background-color: red;
+}
+.nav2 {
+  flex: 1;
+  background-color: lightgray;
+}
+.body {
+  background-color: lightcyan;
+}
+.guide {
+  font-size: 50rpx;
+  text-align: left;
+  color: green;
+}
+.list1 {
+  font-size: 50rpx;
+  border: 1rpx;
+  border-color: black;
+  border-style: solid;
+}
+.btn {
+  margin: 50rpx 0rpx 0rpx 0rpx;
+}
+.area {
+  background-color: white;
+}
+.list2 {
+  font-size: 50rpx;
+  border: 1rpx;
+  border-color: black;
+  border-style: solid;
+  background-color: pink;
+}
+.total 
+{ 
+width:100%; 
+color:green; 
+position:fixed; 
+bottom:0; 
+font-size: 50rpx;
+text-align: center;
+} 
