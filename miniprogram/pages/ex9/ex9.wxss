@@ -1,53 +1,29 @@
-.page {
-  margin: 0rpx 50rpx 50rpx 50rpx;
+.add {
+  background-color: #2d8cf0;
+  border-radius: 50%;
+  width: 100rpx;
+  height: 100rpx;
+  position: fixed;
+  bottom: 40rpx;
+  right: 40rpx;
+  padding: 0 !important;
   text-align: center;
+  line-height: 100rpx;
+  color: #fff;
+  box-shadow: 0 10px 30px rgba(45, 140, 240, .4);
 }
-.nav {
-  display: flex;
-  flex-direction: row;
-  font-size: 70rpx;
+
+
+.van-popup {
+  padding: 24rpx 0;
+
 }
-.nav1 {
-  flex: 1;
-  background-color: red;
+
+.submit {
+  padding: 36rpx;
 }
-.nav2 {
-  flex: 1;
-  background-color: lightgray;
+
+.picker{
+  border-radius: 50rpx;
+  width: 80% !important;
 }
-.body {
-  background-color: lightcyan;
-}
-.guide {
-  font-size: 50rpx;
-  text-align: left;
-  color: green;
-}
-.list1 {
-  font-size: 50rpx;
-  border: 1rpx;
-  border-color: black;
-  border-style: solid;
-}
-.btn {
-  margin: 50rpx 0rpx 0rpx 0rpx;
-}
-.area {
-  background-color: white;
-}
-.list2 {
-  font-size: 50rpx;
-  border: 1rpx;
-  border-color: black;
-  border-style: solid;
-  background-color: pink;
-}
-.total 
-{ 
-width:100%; 
-color:green; 
-position:fixed; 
-bottom:0; 
-font-size: 50rpx;
-text-align: center;
-} 

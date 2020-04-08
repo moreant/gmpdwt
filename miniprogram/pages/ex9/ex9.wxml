@@ -1,38 +1,71 @@
-<view class="page">
-  <view class="nav">
-    <view bindtap="click1" class="{{nav1}}">
-      <text>收入</text>
+<!-- tab栏 -->
+<van-tabs active="{{ 0 }}" bind:change="calMonthView">
+  <!-- 所有栏 -->
+  <van-tab title="所有">
+    <van-cell-group>
+      <!-- 收支单元格 -->
+      <van-cell wx:for="{{ items }}" wx:key="key" title="{{ item.title }}" label="{{ item.date }}">
+      <!-- 收绿红支 -->
+        <text style="color:{{ item.income > 0 ? 'green' : 'red' }};"
+          >{{ item.income || item.expend }}￥</text
+        >
+      </van-cell>
+    </van-cell-group>
+    <!-- 添加按钮 -->
+    <view class="add" bind:tap="show">
+      <van-icon custom-class="add-icon" name="plus"></van-icon>
     </view>
-    <view bindtap="click2" class="{{nav2}}">
-      <text>支出</text>
-    </view>
+  </van-tab>
+  <van-tab title="月视图">
+    <view>
+      <van-cell-group>
+        <van-cell
+          wx:for="{{ months }}"
+          wx:key="month"
+          title="{{ item.month }} 月收支结余"
+          label="支出 {{ item.expend }}￥ 收入 {{ item.income }}￥"
+        >
+          <text>{{ item.income + -item.expend }}￥</text>
+        </van-cell>
+      </van-cell-group></view
+    >
+  </van-tab>
+</van-tabs>
+
+<!-- 添加表单 -->
+<van-popup show="{{ show }}" position="bottom" round bind:close="show">
+<!-- 收 or 支 -->
+  <van-cell title="{{ switch ? '支出' : '收入' }}">
+    <van-switch
+      checked="{{ switch }}"
+      active-color="#ee0a24"
+      inactive-color="#07c160"
+      bind:change="onChangeSwitch"
+    >
+    </van-switch>
+  </van-cell>
+  <!-- 日期选择器 -->
+  <picker
+    mode="date"
+    value="{{ date }}"
+    start="2018-01-01"
+    end="2030-01-01"
+    bindchange="changeDate"
+  >
+    <van-field value="{{ date }}" placeholder="选择时间"> </van-field>
+  </picker>
+  <!-- input的 change 可能会丢失字符，改用 blur 触发 -->
+  <!-- center 会导致 blur 取值失败 -->
+  <van-field value="{{ title }}" placeholder="项目" id="title" bind:blur="inputEnd"></van-field>
+  <van-field
+    tyep="number"
+    value="{{ money }}"
+    placeholder="金额"
+    id="money"
+    bind:blur="inputEnd"
+    autosize
+  ></van-field>
+  <view class="submit">
+    <van-button type="primary" bind:click="submit" round block>提交</van-button>
   </view>
-  <view class="body">
-    <!--收入开始-->
-    <view wx:if="{{condition1}}">
-      <view class="list1" wx:for="{{array}}" wx:key="this">
-        {{item}}
-      </view>
-    </view>
-    <!--收入结尾-->
-    <!--支出开始-->
-    <view wx:if="{{condition2}}" class="finish">
-      <view class="list2" wx:for="{{array1}}" wx:key="this">
-        {{item}}
-      </view>
-    </view>
-    <!--支出结尾-->
-    <!--输入框增加-->
-    <view class="btn">
-      <button bindtap="click" type="primary">增加</button>
-    </view>
-    <view class="area" wx:if="{{input}}">
-      <input bindconfirm="confirm" confirm-type="done" 
-      placeholder="输入{{condition1?'收入':'支出'}}金额" />
-    </view>
-  </view>
-</view>
-  <!-- 底部汇总栏 -->
-  <view class="total">
-    收入:{{income}} 支出:{{pay}} 余额:{{income-pay}}
-  </view>
+</van-popup>
