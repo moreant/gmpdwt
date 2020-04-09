@@ -1,0 +1,24 @@
+<view class="page">
+  <view class="title">虽然能分享，但是得到的文件路径还是临时文件，只能在本机上浏览呢</view>
+  <view class="body">
+    <view style="height:10px"></view>
+    <van-button bindtap="click" type="primary">打开</van-button>
+    <van-button bindtap="cover" type="primary">打马</van-button>
+    <van-button bindtap="seal" type="primary">印章</van-button>
+    <van-button bindtap="fancy" type="primary">花式</van-button>
+    <van-button bindtap="upload" type="primary">上传</van-button>
+    <view style="height:10px"></view>
+    <van-button bindtap="clear" type="primary">清除</van-button>
+    <van-button bindtap="save" type="primary">保存</van-button>
+    <view style="height:10px"></view>
+  </view>
+  <canvas
+    class="canvas"
+    canvas-id="myCanvas"
+    bindtouchstart="start"
+    bindtouchmove="move"
+    bindtouchend="end"
+    disable-scroll="true"
+  >
+  </canvas>
+</view>

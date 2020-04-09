@@ -1,7 +1,6 @@
 {
   "pages": [
-    "pages/ex9/ex9"    
-    
+    "pages/index/index"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -10,7 +9,7 @@
     "navigationBarTextStyle": "black"
   },
   "usingComponents": {
-  
+    "van-button": "@vant/weapp/button/index"
   },
   "sitemapLocation": "sitemap.json"
 }

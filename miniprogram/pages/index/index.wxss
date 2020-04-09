@@ -1,0 +1,21 @@
+.page {
+  margin: 0rpx 25rpx
+}
+
+.title {
+  font-size: 30rpx;
+  color: #ed556a;
+}
+
+.body {
+  margin: 0rpx 0rpx 10rpx 0rpx;
+}
+
+.canvas {
+  width: 700rpx;
+  height: 700rpx;
+}
+
+van-button {
+  margin: 10rpx 10rpx;
+}
