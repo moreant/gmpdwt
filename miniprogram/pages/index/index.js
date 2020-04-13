@@ -1,134 +1,139 @@
-//index.js
-const ctx = wx.createCanvasContext('myCanvas')
-var imagepath
-var fun = false
-var fancy = false
-var seal = false
+import utils from '../../utils/utils'
 Page({
-  //获取分享图片地址
-  onLoad: function (options) {
-    if (options.path !== undefined) {
-      imagepath = options.path
-      ctx.drawImage(imagepath, 0, 0, 700, 700)
-      ctx.draw()
-    }
+
+  /**
+   * 页面的初始数据
+   */
+  data: {
+    running: false,
+    latitude: 0,
+    longitude: 0,
+    markers: [],
+    meters: 0.00,
+    second: 0,
   },
 
-  //选择图片
-  click: function (e) {
-    wx.chooseImage({
-      count: 1,
-      success: res => {
-        this.data.temp = res.tempFilePaths[0]
-        ctx.drawImage(res.tempFilePaths[0], 0, 0, 700, 700)
-        ctx.draw()
-      }
+  record() {
+    if (!this.data.running) {
+      return
+    }
+    this.setData({
+      second: this.data.second + 1
     })
-  },
-
-  //手指移动
-  move: function (e) {
-    //打马赛克
-    if (fun) {
-      ctx.setFillStyle('red')
-      ctx.fillRect(e.touches[0].x, e.touches[0].y, 10, 10)
-      ctx.fillRect(e.touches[0].x + 10, e.touches[0].y + 10, 10, 10)
-      ctx.setFillStyle('pink')
-      ctx.fillRect(e.touches[0].x + 10, e.touches[0].y, 10, 10)
-      ctx.fillRect(e.touches[0].x, e.touches[0].y + 10, 10, 10)
-      ctx.draw(true)
-    } else if (fancy) {
-      const pattern = ctx.createPattern('/images/cool.png', 'repeat')
-      ctx.fillStyle = pattern
-      ctx.fillRect(e.touches[0].x, e.touches[0].y, 16, 16)
-      ctx.draw(true)
-    }
-    //擦除
-    else {
-      ctx.clearRect(e.touches[0].x, e.touches[0].y, 20, 20)
-      ctx.draw(true)
-    }
-  },
-
-  /**
-   * 学号姓名水印
-   */
-  start(e) {
-    if (seal) {
-      ctx.setFontSize(20)
-      console.log(e.touches[0].x, e.touches[0].y);
-      ctx.fillText('07180935莫奕基', e.touches[0].x, e.touches[0].y)
-      ctx.draw(true)
-    }
-  },
-
-  /**
-   * 印章按钮
-   */
-  seal() {
-    seal = true
-    fancy = false
-    fun = false
-  },
-
-  /**
-   * 花样按钮
-   */
-  fancy() {
-    fancy = true
-    seal = false
-    fun = false
-  },
-
-  /**
-   * 上传处理
-   */
-  upload() {
-    wx.uploadFile({
-      url: 'https://www.gdmec.vip/upload', 
-      filePath: imagepath,
-      name: 'file',
+    wx.getLocation({
+      type: 'gcj02',
       success: res => {
-        const path = JSON.parse(res.data)
-        wx.downloadFile({
-          url: path.url,
-          success: res => {
-            if (res.statusCode === 200) {
-              console.log(res);
-              imagepath = res.tempFilePath
-              ctx.drawImage(res.tempFilePath, 0, 0, 700, 700)
-              ctx.draw()
-            }
+        console.log(this.data.latitude);
+        const newMarker = {
+          // 在控制台里一个一个调太慢了，不如直接 + 随机数
+          latitude: this.data.latitude + ((Math.random() * (100 - 1) + 1 | 0) / 10000),
+          longitude: this.data.longitude + ((Math.random() * (100 - 1) + 1 | 0) / 10000),
+          // latitude: res.latitude,
+          // longitude: res.longitude,
+          iconPath: '/images/redPoint.png'
+        }
+        let pace = 0
+        const tmarkers = this.data.markers
+        if (this.data.markers.length > 0) {
+          const lastmarker = this.data.markers[this.data.markers.length - 1]
+          pace = utils.getDistance(lastmarker.latitude, lastmarker.longitude, newMarker.latitude, newMarker.longitude)
+          console.log(pace);
+          if (pace < 15) {
+            pace = 0
+          } else {
+            tmarkers.push(newMarker)
           }
+        } else {
+          tmarkers.push(newMarker)
+        }
+        this.setData({
+          // 22.71991
+          latitude: res.latitude,
+          // 114.24779
+          longitude: res.longitude,
+          markers: tmarkers,
+          meters: this.data.meters + pace,
         })
       }
     })
-
   },
 
-  //按键切换
-  clear: function (e) {
-    fun = false
+  run() {
+    this.setData({ running: !this.data.running })
   },
-  cover: function (e) {
-    fun = true
+
+  clear() {
+    this.setData({ markers: [], meters: 0, second: 0, running: false })
   },
-  //保存图片
-  save: function (e) {
-    console.log("保存")
-    wx.canvasToTempFilePath({
-      canvasId: 'myCanvas',
-      success(res) {
-        imagepath = res.tempFilePath
+
+  curLocation() {
+    wx.getLocation({
+      type: 'gcj02',
+      success: res => {
+        console.log('latitude', res.latitude);
+        console.log('longitude', res.longitude);
+        this.setData({
+          latitude: res.latitude,
+          longitude: res.longitude,
+        })
       }
     })
   },
-  //分享给好友
+
+  /**
+   * 生命周期函数--监听页面加载
+   */
+  onLoad: function (options) {
+    this.curLocation()
+    setInterval(this.record, 1000)
+  },
+
+  /**
+   * 生命周期函数--监听页面初次渲染完成
+   */
+  onReady: function () {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面显示
+   */
+  onShow: function () {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面隐藏
+   */
+  onHide: function () {
+
+  },
+
+  /**
+   * 生命周期函数--监听页面卸载
+   */
+  onUnload: function () {
+
+  },
+
+  /**
+   * 页面相关事件处理函数--监听用户下拉动作
+   */
+  onPullDownRefresh: function () {
+
+  },
+
+  /**
+   * 页面上拉触底事件的处理函数
+   */
+  onReachBottom: function () {
+
+  },
+
+  /**
+   * 用户点击右上角分享
+   */
   onShareAppMessage: function () {
-    return {
-      title: '我的图片',
-      desc: '',
-      path: '/pages/index/index?path=' + imagepath
-    }
+
   }
 })
