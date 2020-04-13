@@ -1,9 +1,13 @@
 <view class="head">
-  <button class="btn" type="primary" bindtap="run">{{ running ? "暂停记录" : "开始记录" }}</button>
-  <button class="btn" type="primary" bindtap="clear">清除数据</button>
+  <button class="weui-btn weui-btn_mini weui-btn_primary left" bindtap="run">{{ running ? "暂停记录" : "开始记录" }}</button>
+  <button class="weui-btn weui-btn_mini weui-btn_primary left" bindtap="saveRun">保存</button>
+  <button class="weui-btn weui-btn_mini weui-btn_primary left" bindtap="reRun">回放</button>
+  <button class="weui-btn weui-btn_mini weui-btn_warn left" bindtap="clear">清除数据</button>
 </view>
+
 <view class="counter">
-  <text space="nbsp">里程数:{{ util.toKM(meters) }}km 时间:{{ util.formatHour(second) }}</text>
+  <view>里程数:{{ util.toKM(meters) }}km</view>
+  <view>时间:{{ util.formatHour(second) }}</view>
 </view>
 
 <wxs module="util">
@@ -16,4 +20,5 @@
   latitude="{{ latitude }}"
   longitude="{{ longitude }}"
   markers="{{ markers }}"
+  polyline="{{ polyline }}"
 ></map>
