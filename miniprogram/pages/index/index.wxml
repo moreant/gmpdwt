@@ -1,24 +1,33 @@
-<view class="head">
-  <button class="weui-btn weui-btn_mini weui-btn_primary left" bindtap="run">{{ running ? "暂停记录" : "开始记录" }}</button>
-  <button class="weui-btn weui-btn_mini weui-btn_primary left" bindtap="saveRun">保存</button>
-  <button class="weui-btn weui-btn_mini weui-btn_primary left" bindtap="reRun">回放</button>
-  <button class="weui-btn weui-btn_mini weui-btn_warn left" bindtap="clear">清除数据</button>
+<view class="container">
+  <form bindsubmit="submit">
+      <view>
+      <text>学号：</text>
+      <input name="sno" value="{{sno}}" />
+    </view>
+    <view>
+      <text>姓名：</text>
+      <input name="name" value="" />
+    </view>
+    <view>
+      <text>性别：</text>
+      <radio-group name="gender">
+        <label><radio value="1" checked="true"/>男</label>
+        <label><radio value="0" checked=""/>女</label>      
+      </radio-group>
+    </view>
+    <view>
+      <text>专业技能：</text>
+      <checkbox-group name="skills">
+        <label><checkbox value="html" checked="true"/>HTML</label>
+        <label><checkbox value="css"  />CSS</label>
+        <label><checkbox value="js" />JavaScript</label>
+        <label><checkbox value="ps" />Photoshop</label>     
+      </checkbox-group>
+    </view>
+    <view>
+      <text>您的意见：</text>
+      <textarea name="opinion" value="" />
+    </view>
+    <button form-type="submit">提交</button>
+  </form>
 </view>
-
-<view class="counter">
-  <view>里程数:{{ util.toKM(meters) }}km</view>
-  <view>时间:{{ util.formatHour(second) }}</view>
-</view>
-
-<wxs module="util">
-  function formatHour(second){ return Math.floor(second/3600)+":"+Math.floor((second %
-  3600)/60)+":"+(second % 60) } function toKM(meter){ return (meter/1000).toFixed(2) }
-  module.exports = { formatHour : formatHour, toKM:toKM }
-</wxs>
-<map
-  class="mapView"
-  latitude="{{ latitude }}"
-  longitude="{{ longitude }}"
-  markers="{{ markers }}"
-  polyline="{{ polyline }}"
-></map>
