@@ -1,32 +1,35 @@
 <view class="container">
   <form bindsubmit="submit">
-      <view>
+    <view>
       <text>学号：</text>
-      <input name="sno" value="{{sno}}" />
+      <input name="sno" value="{{ sno }}" />
     </view>
     <view>
       <text>姓名：</text>
-      <input name="name" value="" />
+      <input name="name" value="{{ name }}" />
     </view>
     <view>
       <text>性别：</text>
       <radio-group name="gender">
-        <label><radio value="1" checked="true"/>男</label>
-        <label><radio value="0" checked=""/>女</label>      
+        <label><radio value="1" checked="{{ gender === 1 }}"></radio>男</label>
+        <label><radio value="0" checked="{{ gender === 0 }}"></radio>女</label>
+        <label><radio value="-1" checked="{{ gender === -1 }}"></radio>未知</label>
       </radio-group>
     </view>
     <view>
       <text>专业技能：</text>
       <checkbox-group name="skills">
-        <label><checkbox value="html" checked="true"/>HTML</label>
-        <label><checkbox value="css"  />CSS</label>
-        <label><checkbox value="js" />JavaScript</label>
-        <label><checkbox value="ps" />Photoshop</label>     
+        <label><checkbox value="html" checked="{{ skills[0].checked }}"></checkbox>HTML</label>
+        <label><checkbox value="css" checked="{{ skills[1].checked }}"></checkbox>CSS</label>
+        <label><checkbox value="js" checked="{{ skills[2].checked }}"></checkbox>JavaScript</label>
+        <label><checkbox value="ps" checked="{{ skills[3].checked }}"></checkbox>Photoshop</label>
+        <label><checkbox value="php" checked="{{ skills[4].checked }}"></checkbox>PHP</label>
+        <label><checkbox value="java" checked="{{ skills[5].checked }}"></checkbox>Java</label>
       </checkbox-group>
     </view>
     <view>
       <text>您的意见：</text>
-      <textarea name="opinion" value="" />
+      <textarea name="opinion" value=""></textarea>
     </view>
     <button form-type="submit">提交</button>
   </form>

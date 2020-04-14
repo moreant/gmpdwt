@@ -2,7 +2,8 @@ Page({
 
   submit(e) {
     wx.request({
-      method:'POST',
+      method: 'POST',
+      // 改为局域网 ip 地址
       url: 'http://192.168.31.158:3000',
       data: e.detail.value,
       success: res => {
@@ -23,9 +24,11 @@ Page({
    */
   onLoad: function (options) {
     wx.request({
-      url: 'http://127.0.0.1:3000',      
+      // 改为局域网 ip 地址
+      url: 'http://192.168.31.158:3000',
       success: res => {
         console.log('发送get请求，后端返回以下信息', res);
+        this.setData(res.data)
       }
     })
   },
