@@ -1,0 +1,8 @@
+function formatTime(time) {
+  var minute = Math.floor(time / 60) % 60;
+  var second = Math.floor(time) % 60
+  return (minute < 10 ? '0' + minute : minute) + ':' + (second < 10 ? '0' + second : second)
+}
+module.exports = {
+  formatTime: formatTime,
+}

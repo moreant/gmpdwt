@@ -1,43 +1,107 @@
-Page({
+import musicList from "../../utils/musicList";
 
-  submit(e) {
-    wx.request({
-      method: 'POST',
-      // 改为局域网 ip 地址
-      url: 'http://192.168.31.158:3000',
-      data: e.detail.value,
-      success: res => {
-        console.log('发送post请求，后端返回以下信息', res);
-      }
-    })
-  },
+const audioCtx = wx.createInnerAudioContext()
+Page({
 
   /**
    * 页面的初始数据
    */
   data: {
+    item: 0,
+    tab: 0,
+    state: 'paused',
+    playIndex: 0,
+    playList: musicList,
+    audioCtx: '',
+    play: {
+      currentTime: 0,
+      duration: 0,
+      percent: 0,
+      title: '',
+      singer: '',
+      coverImgUrl: ''
+    }
+  },
 
+  changeItem(e) {
+    this.setData({
+      item: e.target.dataset.item
+    })
+  },
+
+  changeTab(e) {
+    this.setData({ tab: e.detail.current })
+  },
+
+  selectMusic(index) {
+    console.log(index);
+    const music = this.data.playList[index]
+    console.log(music);
+    const { src, title, singer, coverImgUrl } = music
+    audioCtx.src = src
+    this.setData({
+      playIndex: index,
+      play: {
+        title, singer, coverImgUrl,
+        currentTime: 0,
+        duration: 0,
+        percent: 0
+      }
+    })
+  },
+
+  play() {
+    audioCtx.play()
+    this.setData({ state: 'running' })
+  },
+
+  pause() {
+    audioCtx.pause()
+    this.setData({ state: 'paused' })
+  },
+
+  next() {
+    const { playIndex, playList, state } = this.data
+    const index = (playIndex + 1) % playList.length
+    this.selectMusic(index)
+    if (state === 'running') {
+      this.play()
+    }
+  },
+
+  change(e) {
+    this.selectMusic(e.currentTarget.dataset.index)
+    this.play()
   },
 
   /**
-   * 生命周期函数--监听页面加载
-   */
+  * 生命周期函数--监听页面加载
+  */
   onLoad: function (options) {
-    wx.request({
-      // 改为局域网 ip 地址
-      url: 'http://192.168.31.158:3000',
-      success: res => {
-        console.log('发送get请求，后端返回以下信息', res);
-        this.setData(res.data)
-      }
-    })
+
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady: function () {
-
+  onReady() {
+    audioCtx.onError(() => {
+      console.log('播放失败：', this.audioCtx.src);
+    })
+    audioCtx.onEnded(() => {
+      this.next()
+    })
+    audioCtx.onTimeUpdate(() => {
+      const { duration, currentTime } = audioCtx
+      const play = {
+        duration,
+        currentTime,
+        percent: currentTime / duration * 1000,
+        ...this.data.play
+      }
+      this.setData({ play })
+    })
+    this.selectMusic(0)
   },
 
   /**
