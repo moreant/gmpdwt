@@ -1,4 +1,5 @@
-import musicList from "../../utils/musicList";
+import musicList from "./musicList";
+import recommandList from "./recommandList";
 
 const audioCtx = wx.createInnerAudioContext()
 Page({
@@ -11,7 +12,10 @@ Page({
     tab: 0,
     state: 'paused',
     playIndex: 0,
-    playList: musicList,
+    // 将播放列表和推荐列表合并
+    playList: [].concat(musicList, recommandList),
+    // 用于列表渲染
+    recommandList: recommandList,
     audioCtx: '',
     play: {
       currentTime: 0,
@@ -34,9 +38,7 @@ Page({
   },
 
   selectMusic(index) {
-    console.log(index);
     const music = this.data.playList[index]
-    console.log(music);
     const { src, title, singer, coverImgUrl } = music
     audioCtx.src = src
     this.setData({
@@ -75,6 +77,27 @@ Page({
   },
 
   /**
+   * 在推荐页选择歌曲
+   */
+  recommand(e) {
+    this.selectMusic(e.currentTarget.dataset.index + musicList.length)
+    this.play()
+  },
+
+  /**
+   * 滑动条变化时
+   */
+  sliderchange(e) {
+    const value = e.detail.value
+    const position = value / 100 * this.data.play.duration
+    audioCtx.seek(position)
+    this.setData({ 'play.currentTime': position })
+    // 停启是为了解决 onTimeUpdate 失效
+    audioCtx.pause()
+    audioCtx.play()
+  },
+
+  /**
   * 生命周期函数--监听页面加载
   */
   onLoad: function (options) {
@@ -86,18 +109,20 @@ Page({
    */
   onReady() {
     audioCtx.onError(() => {
-      console.log('播放失败：', this.audioCtx.src);
+      console.log('播放失败：', audioCtx.src);
     })
     audioCtx.onEnded(() => {
       this.next()
     })
+
     audioCtx.onTimeUpdate(() => {
       const { duration, currentTime } = audioCtx
       const play = {
+        // es6 扩展运算
+        ...this.data.play,
         duration,
         currentTime,
-        percent: currentTime / duration * 1000,
-        ...this.data.play
+        percent: currentTime / duration * 100
       }
       this.setData({ play })
     })

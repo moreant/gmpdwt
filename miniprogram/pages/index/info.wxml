@@ -1,29 +1,37 @@
 <!-- 内容滚动区域 -->
 <scroll-view class="content-info" scroll-y>
   <!-- 轮播图 -->
-  <swiper class="content-info-slide" indicator-color="rgba(255,255,255,.5)" indicator-active-color="#fff" indicator-dots circular autoplay>
+  <swiper
+    class="content-info-slide"
+    indicator-color="rgba(255,255,255,.5)"
+    indicator-active-color="#fff"
+    indicator-dots
+    circular
+    autoplay
+  >
+  <!-- 轮播图使用在线生成的网图 -->
     <swiper-item>
-      <image src="/images/banner.jpg" />
+      <image src="https://picsum.photos/seed/sd/600/400" mode="center"></image>
     </swiper-item>
     <swiper-item>
-      <image src="/images/banner.jpg" />
+      <image src="https://picsum.photos/seed/asd/600/400" mode="center"></image>
     </swiper-item>
     <swiper-item>
-      <image src="/images/banner.jpg" />
+      <image src="https://picsum.photos/seed/12s/600/400" mode="center"></image>
     </swiper-item>
   </swiper>
   <!-- 功能按钮 -->
   <view class="content-info-portal">
     <view>
-      <image src="/images/04.png" />
+      <image src="/images/04.png"></image>
       <text>私人FM</text>
     </view>
     <view>
-      <image src="/images/05.png" />
+      <image src="/images/05.png"></image>
       <text>每日歌曲推荐</text>
     </view>
     <view>
-      <image src="/images/06.png" />
+      <image src="/images/06.png"></image>
       <text>云音乐新歌榜</text>
     </view>
   </view>
@@ -31,29 +39,16 @@
   <view class="content-info-list">
     <view class="list-title">推荐歌曲</view>
     <view class="list-inner">
-      <view class="list-item">
-        <image src="/images/cover.jpg" />
-        <view>紫罗兰</view>
-      </view>
-      <view class="list-item">
-        <image src="/images/cover.jpg" />
-        <view>五月之歌</view>
-      </view>
-      <view class="list-item">
-        <image src="/images/cover.jpg" />
-        <view>菩提树</view>
-      </view>
-      <view class="list-item">
-        <image src="/images/cover.jpg" />
-        <view>欢乐颂</view>
-      </view>
-      <view class="list-item">
-        <image src="/images/cover.jpg" />
-        <view>安魂曲</view>
-      </view>
-      <view class="list-item">
-        <image src="/images/cover.jpg" />
-        <view>摇篮曲</view>
+    <!-- 列表渲染推荐列表 -->
+      <view
+        wx:for="{{ recommandList }}"
+        wx:key="id"
+        class="list-item"
+        bind:tap="recommand"
+        data-index="{{ index }}"
+      >
+        <image src="{{ item.coverImgUrl }}"></image>
+        <view>{{ item.title }}</view>
       </view>
     </view>
   </view>
