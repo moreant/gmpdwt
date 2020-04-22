@@ -2,7 +2,7 @@
   <swiper-item wx:for="{{ voteList }}" wx:key="_id">
     <image
       class="img"
-      mode="aspectFit"
+      mode="scaleToFill"
       src="{{ item.fileid }}"
       class="slide-image"
       data-voteid="{{ item._id }}"
