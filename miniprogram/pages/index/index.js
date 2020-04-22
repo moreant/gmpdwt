@@ -1,132 +1,83 @@
-import musicList from "./musicList";
-import recommandList from "./recommandList";
+// pages/index/index.js
 
-const audioCtx = wx.createInnerAudioContext()
+const db = wx.cloud.database()
+const votelog = db.collection('votelog')
+const votes = db.collection('votes')
+const _ = db.command
+
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    item: 0,
-    tab: 0,
-    state: 'paused',
-    playIndex: 0,
-    // 将播放列表和推荐列表合并
-    playList: [].concat(musicList, recommandList),
-    // 用于列表渲染
-    recommandList: recommandList,
-    audioCtx: '',
-    play: {
-      currentTime: 0,
-      duration: 0,
-      percent: 0,
-      title: '',
-      singer: '',
-      coverImgUrl: ''
+    imgList: [],
+    voted: false
+  },
+
+
+  async tap(e) {
+    if (this.data.voted) {
+      wx.showToast({ title: '您已投票', icon: "none" })
+      return
     }
-  },
-
-  changeItem(e) {
-    this.setData({
-      item: e.target.dataset.item
-    })
-  },
-
-  changeTab(e) {
-    this.setData({ tab: e.detail.current })
-  },
-
-  selectMusic(index) {
-    const music = this.data.playList[index]
-    const { src, title, singer, coverImgUrl } = music
-    audioCtx.src = src
-    this.setData({
-      playIndex: index,
-      play: {
-        title, singer, coverImgUrl,
-        currentTime: 0,
-        duration: 0,
-        percent: 0
+    // 防止多次点击
+    this.data.voted = true
+    wx.showLoading({ title: '投票中', })
+    try {
+      const { voteid, index } = e.target.dataset
+      await votelog.add({
+        data: {
+          voteid,
+          date: new Date().valueOf()
+        }
+      })
+      const updated = await votes
+        .doc(voteid)
+        .update({ data: { count: _.inc(1) } })
+        .then(res => { return res.stats.updated })
+      if (updated === 1) {
+        this.data.voted = true
+        wx.hideLoading()
+        wx.showToast({ title: '投票成功', })
+        const voteList = this.data.voteList
+        if (voteList[index].count) {
+          voteList[index].count += 1
+        } else {
+          voteList[index].count = 1
+        }
+        this.setData({ voteList })
+        return
       }
-    })
-  },
-
-  play() {
-    audioCtx.play()
-    this.setData({ state: 'running' })
-  },
-
-  pause() {
-    audioCtx.pause()
-    this.setData({ state: 'paused' })
-  },
-
-  next() {
-    const { playIndex, playList, state } = this.data
-    const index = (playIndex + 1) % playList.length
-    this.selectMusic(index)
-    if (state === 'running') {
-      this.play()
+    } catch (error) {
+      this.data.voted = false
+      console.log(error);
+      wx.hideLoading()
+      wx.showToast({ title: error, icon: "none" })
     }
   },
 
-  change(e) {
-    this.selectMusic(e.currentTarget.dataset.index)
-    this.play()
-  },
-
   /**
-   * 在推荐页选择歌曲
+   * 生命周期函数--监听页面加载
    */
-  recommand(e) {
-    this.selectMusic(e.currentTarget.dataset.index + musicList.length)
-    this.play()
-  },
-
-  /**
-   * 滑动条变化时
-   */
-  sliderchange(e) {
-    const value = e.detail.value
-    const position = value / 100 * this.data.play.duration
-    audioCtx.seek(position)
-    this.setData({ 'play.currentTime': position })
-    // 停启是为了解决 onTimeUpdate 失效
-    audioCtx.pause()
-    audioCtx.play()
-  },
-
-  /**
-  * 生命周期函数--监听页面加载
-  */
-  onLoad: function (options) {
-
+  onLoad: async function (options) {
+    const _openid = await wx.cloud.callFunction({
+      name: 'getOpenId'
+    }).then(res => res.result.openId)
+    await votelog
+      .where({ _openid }).get()
+      .then(res => {
+        this.data.voted = !!res.data.length
+      })
+    const voteList = await votes.get().then(res => { return res.data })
+    this.setData({ voteList })
   },
 
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
-  onReady() {
-    audioCtx.onError(() => {
-      console.log('播放失败：', audioCtx.src);
-    })
-    audioCtx.onEnded(() => {
-      this.next()
-    })
+  onReady: function () {
 
-    audioCtx.onTimeUpdate(() => {
-      const { duration, currentTime } = audioCtx
-      const play = {
-        // es6 扩展运算
-        ...this.data.play,
-        duration,
-        currentTime,
-        percent: currentTime / duration * 100
-      }
-      this.setData({ play })
-    })
-    this.selectMusic(0)
   },
 
   /**
