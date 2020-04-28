@@ -1,4 +1,4 @@
-<swiper bindchange="schange" circular="true">
+<swiper bindchange="schange" current="{{ index }}" circular="true">
   <swiper-item
     wx:for="{{ candidateList }}"
     wx:key="_id"
@@ -7,6 +7,6 @@
     data-fileid="{{ item.fileID }}"
     data-index="{{ index }}"
   >
-    <image mode="aspectFit" src="{{ item.fileID }}"></image>
+    <image mode="widthFix" src="{{ item.fileID }}" class="{{ item.class }}"></image>
   </swiper-item>
 </swiper>

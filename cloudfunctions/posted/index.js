@@ -7,9 +7,8 @@ cloud.init()
 exports.main = async (event, context) => {
 
   const posts = cloud.database().collection('posts')
-  // 这步骤有问题
   const res = await posts.where({
-    _openid: '{openid}'
+    _openid: cloud.getWXContext().OPENID
   }).get()
 
   return res.data

@@ -5,6 +5,7 @@ let res = null
 Page({
   data: {
     candidateList: [], //候选人数组
+    index: 0,
     posted: false //已投票状态
   },
 
@@ -12,7 +13,7 @@ Page({
   //页面加载生命周期回调
   onLoad: async function (options) {
     wx.showLoading({
-      title: '初始化中',
+      title: '加载中',
       mask: true
     })
     //调用云函数posted获取是否投过票
@@ -21,16 +22,29 @@ Page({
     }).then(res => {
       return res.result[0] || ''
     })
+    /** @type {Array} */
     const candidateList = (await candidates.get()).data
-    console.log(candidateList);
+    // 如果带了fileID参数
+    let index = 0
+    if (options.fileID) {
+      const { fileID } = options
+      index = candidateList.findIndex(item => item.fileID === fileID)
+    }
+    // 如果投了票
+    if (posted) {
+      const index = candidateList.findIndex(item => item.fileID === posted.fileID)
+      candidateList[index].class = 'border'
+    }
+
     this.setData({
       candidateList,
-      posted
+      posted,
+      index
     })
     // 刷新标题栏
     this.schange({
       detail: {
-        current: 0
+        current: index
       }
     })
     wx.hideLoading({})
@@ -49,56 +63,71 @@ Page({
 
 
   async tap(e) {
-    //如果已投票，提示不能再投
     if (this.data.posted) {
-      //挑战任务2 取消投票提示，然后调用云函数取消投票。
-      wx.showToast({
-        title: '投过票不能再投！',
-        icon: 'success'
+      const { _id, fileID } = this.data.posted
+      const { confirm } = await wx.showModal({
+        title: '您已投票',
+        content: '是否取消上次投票',
       })
-      return
-    }
-    const { confirm } = await wx.showModal({
-      title: '投票确认',
-      content: '确定投这件作品吗？',
-    })
-    if (confirm) {
-      const { fileid, index } = e.currentTarget.dataset
-      wx.showLoading({
-        title: '投票中',
-      })
-      const updated = await wx.cloud.callFunction({
-        name: 'post',
-        data: {
-          fileID: fileid
-        }
-      }).then(res => {
-        return res.result.updated
-      })
-      if (updated === 1) {
-        this.data.candidateList[index].vote++
-        this.schange({
-          detail: {
-            current: index
+      if (confirm) {
+        const updated = await wx.cloud.callFunction({
+          name: 'removePost',
+          data: {
+            _id,
+            fileID
           }
+        }).then(res => {
+          return res.result
         })
-        wx.showToast({
-          title: '投票成功',
-        })
-      } else {
-        wx.showToast({
-          title: '投票失败',
-        })
+        if (updated === 1) {
+          this.relaunch()
+        } else {
+          wx.showToast({ title: '取消失败', })
+        }
       }
-
-      // // 页面的data的当前候选人的票数加1
-      // this.data.candidates[this.data.swiperCurrent].vote++
-
-      // // this.data.posted = true
-      // wx.showToast({
-      //   title: '投票成功',
-      // })
+    } else {
+      const { confirm } = await wx.showModal({
+        title: '投票确认',
+        content: '确定投这件作品吗？',
+      })
+      if (confirm) {
+        const { fileid, index } = e.currentTarget.dataset
+        wx.showLoading({
+          title: '投票中',
+        })
+        const updated = await wx.cloud.callFunction({
+          name: 'post',
+          data: {
+            fileID: fileid
+          }
+        }).then(res => {
+          return res.result.updated
+        })
+        if (updated === 1) {
+          this.data.candidateList[index].vote++
+          this.schange({
+            detail: {
+              current: index
+            }
+          })
+          this.relaunch()
+        } else {
+          wx.showToast({
+            title: '投票失败',
+          })
+        }
+      }
     }
+  },
+
+  /**
+   * 统一重加载方法
+   * @param {String} param 重加载参数
+   */
+  relaunch(param = '') {
+    wx.reLaunch({
+      url: '/' + getCurrentPages()[0].route + param
+    })
   },
 
   async long(e) {
@@ -129,9 +158,8 @@ Page({
         fileID
       }
     })
-    wx.reLaunch({
-      url: '/' + getCurrentPages()[0].route
-    })
+    const param = '?fileID=' + fileID
+    this.relaunch(param)
   }
 
 })
