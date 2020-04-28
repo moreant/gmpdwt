@@ -1,14 +1,12 @@
-<swiper bindchange="schange">
-  <swiper-item wx:for="{{ voteList }}" wx:key="_id">
-    <image
-      class="img"
-      mode="aspectFit"
-      src="{{ item.fileid }}"
-      class="slide-image"
-      data-voteid="{{ item._id }}"
-      data-index="{{ index }}"
-      bindtap="tap"
-    ></image>
-    <text class="number">{{ item.count }}</text>
+<swiper bindchange="schange" circular="true">
+  <swiper-item
+    wx:for="{{ candidateList }}"
+    wx:key="_id"
+    bind:tap="tap"
+    bind:longpress="long"
+    data-fileid="{{ item.fileID }}"
+    data-index="{{ index }}"
+  >
+    <image mode="aspectFit" src="{{ item.fileID }}"></image>
   </swiper-item>
 </swiper>
