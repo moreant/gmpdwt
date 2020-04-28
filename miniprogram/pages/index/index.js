@@ -1,192 +1,164 @@
-// pages/index/index.js
-
-import moment from "moment";
-
 const db = wx.cloud.database()
-// 投票记录集合
-const votelog = db.collection('votelog')
-// 投票项集合
-const votes = db.collection('votes')
-const _ = db.command
+const candidates = db.collection('candidates')
 
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-    imgList: [],
-    vote: ''
+    candidateList: [], //候选人数组
+    index: 0,
+    posted: false //已投票状态
   },
 
 
-  /**
-   * 获取本用户本填投票
-   * @param {String} _openid 用户的 _openid
-   */
-  async getVote(_openid) {
-    // 获取今天的时间戳
-    const nowDay = 0 - moment(0, "hh").format("x")
-    const res = await votelog
-      // 查找比今天时间戳大的数据
-      .where({ _openid, date: _.gt(nowDay) }).get()
-    return res.data[0]
-  },
-
-  /**
-   * 取消投票
-   */
-  async undoVoting() {
-    // 回调函数 Promise 化
-    const res = await new Promise((resolve, reject) => {
-      wx.showModal({
-        title: '您已投票',
-        content: '是否取消之前的投票',
-        success: (res) => resolve(res)
-      })
+  //页面加载生命周期回调
+  onLoad: async function (options) {
+    wx.showLoading({
+      title: '加载中',
+      mask: true
     })
-    // 确定取消
-    if (res.confirm) {
-      const { _openid, voteList, vote: { voteid } } = this.data
-      wx.showLoading({ title: '取消中', })
-      // 移除指定的投票记录
-      await votelog.where({ _openid, voteid }).remove()
-      // 调用改变计数方法，自增 -1
-      await this.changeCount(voteid, -1)
-      // 循环查找本地投票列表，删除对应的计数
-      voteList.forEach((item, index) => {
-        if (item._id === voteid) {
-          voteList[index].count -= 1
-        }
-      })
-      this.setData({ voteList, vote: '' })
-      wx.showToast({ title: '取消成功', })
+    //调用云函数posted获取是否投过票
+    const posted = await wx.cloud.callFunction({
+      name: 'posted'
+    }).then(res => {
+      return res.result[0] || ''
+    })
+    /** @type {Array} */
+    const candidateList = (await candidates.get()).data
+    // 如果带了fileID参数
+    let index = 0
+    if (options.fileID) {
+      const { fileID } = options
+      index = candidateList.findIndex(item => item.fileID === fileID)
     }
+    // 如果投了票
+    if (posted) {
+      const index = candidateList.findIndex(item => item.fileID === posted.fileID)
+      candidateList[index].class = 'border'
+    }
+
+    this.setData({
+      candidateList,
+      posted,
+      index
+    })
+    // 刷新标题栏
+    this.schange({
+      detail: {
+        current: index
+      }
+    })
+    wx.hideLoading({})
   },
 
-  /**
-   * 投票计数增加/减少 使用 inc 原子操作 
-   * inc: 原子自增多个用户同时写，对数据库来说都是将字段自增，不会有后来者覆写前者的情况
-   * @param {String} _id 投票项集合 _id
-   * @param {Number} inc 增加/减少数
-   */
-  async changeCount(_id, inc) {
-    const res = await votes
-      .doc(_id)
-      .update({ data: { count: _.inc(inc) } })
-    return res.stats.updated
+  async schange(res) {
+    const { current } = res.detail
+    const { candidateList } = this.data
+    const vote = candidateList[current].vote || 0
+    this.data.swiperCurrent = current
+    //设置标题栏内容
+    wx.setNavigationBarTitle({
+      title: `莫奕基 ${current + 1} / ${candidateList.length} 票数：${vote}`
+    })
   },
 
-  /**
-   * 图片点击事件
-   */
+
   async tap(e) {
-    // 查到已有投票则调用取消投票对话框
-    if (!!this.data.vote) {
-      this.undoVoting()
-    } else {
-      if (this.data.loading) { return }
-      // 开始增加投票的耗时操作，防止重复投票
-      this.data.loading = true
-      const { voteid, index } = e.target.dataset
-      const { _openid, voteList } = this.data
-      wx.showLoading({ title: '投票中', })
-      const date = new Date().valueOf()
-      // 添加投票记录
-      const _id = await votelog.add({
-        data: { voteid, date }
+    if (this.data.posted) {
+      const { _id, fileID } = this.data.posted
+      const { confirm } = await wx.showModal({
+        title: '您已投票',
+        content: '是否取消上次投票',
       })
-      // 调用投票计数方法，自增 +1
-      const updated = await this.changeCount(voteid, 1)
-      // 用于更新本地投票记录
-      const vote = { _id, _openid, voteid, date }
-      // 投票成功
-      if (updated === 1) {
-        this.data.loading = false
-        wx.showToast({ title: '今天投票成功', })
-        // 更新本地投票计数 || 0 防止无计数时相加的 NaN
-        voteList[index].count = (voteList[index].count || 0) + 1
-        this.setData({ voteList, vote })
+      if (confirm) {
+        const updated = await wx.cloud.callFunction({
+          name: 'removePost',
+          data: {
+            _id,
+            fileID
+          }
+        }).then(res => {
+          return res.result
+        })
+        if (updated === 1) {
+          this.relaunch()
+        } else {
+          wx.showToast({ title: '取消失败', })
+        }
+      }
+    } else {
+      const { confirm } = await wx.showModal({
+        title: '投票确认',
+        content: '确定投这件作品吗？',
+      })
+      if (confirm) {
+        const { fileid, index } = e.currentTarget.dataset
+        wx.showLoading({
+          title: '投票中',
+        })
+        const updated = await wx.cloud.callFunction({
+          name: 'post',
+          data: {
+            fileID: fileid
+          }
+        }).then(res => {
+          return res.result.updated
+        })
+        if (updated === 1) {
+          this.data.candidateList[index].vote++
+          this.schange({
+            detail: {
+              current: index
+            }
+          })
+          this.relaunch()
+        } else {
+          wx.showToast({
+            title: '投票失败',
+          })
+        }
       }
     }
   },
 
   /**
-   * 轮播图滑动事件，更新标题栏
+   * 统一重加载方法
+   * @param {String} param 重加载参数
    */
-  schange(e) {
-    const { current } = e.detail
-    const { voteList } = this.data
-    // 解构指定默认值，防止计数为零
-    const { count = 0 } = voteList[current]
-    wx.setNavigationBarTitle({
-      title: `${current + 1}/${voteList.length} 票数：${count}`,
+  relaunch(param = '') {
+    wx.reLaunch({
+      url: '/' + getCurrentPages()[0].route + param
     })
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: async function (options) {
-    // 调用云函数获得用户 _openid
-    const _openid = await wx.cloud.callFunction({
-      name: 'getOpenId'
-    }).then(res => res.result.openId)
-    // 调用获取投票方法
-    const vote = await this.getVote(_openid)
-    // 获取投票列表
-    const voteList = await votes.get().then(res => { return res.data })
-    this.setData({ voteList, vote, _openid })
-    // 标题栏默认显示投票列表第一个
-    this.schange({ detail: { current: 0 } })
-  },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
-
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
-
+  async long(e) {
+    /** @type {WechatMiniprogram.ChooseImageSuccessCallbackResult} */
+    const tempFilePaths = await wx.chooseImage({
+      count: 1,
+    }).then(res => {
+      return res.tempFilePaths
+    })
+    const extName = (/\.(\w+)$/.exec(tempFilePaths[0]))[0]
+    wx.showLoading({
+      title: '上传中',
+      mask: true
+    })
+    const fileID = await wx.cloud.uploadFile({
+      cloudPath: +new Date() + extName,
+      filePath: tempFilePaths[0]
+    }).then(res => {
+      return res.fileID
+    })
+    wx.showLoading({
+      title: '保存中',
+      mask: true
+    })
+    await wx.cloud.callFunction({
+      name: 'addCandidate',
+      data: {
+        fileID
+      }
+    })
+    const param = '?fileID=' + fileID
+    this.relaunch(param)
   }
+
 })

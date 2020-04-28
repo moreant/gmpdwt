@@ -1,19 +1,24 @@
-page{
-  display:flex;
-  width:100%;
-  height:100vh;
+page {
+  width: 100%;
+  height: 100%;
 }
-swiper{
-  width:100%;
-  height:100vh;
+
+swiper {
+  width: 100%;
+  height: 100%;
 }
-image{
-  width:100%;
-  height:100vh;
+
+swiper-item {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
-.number{
-  position:fixed;
-  top:30vh;
-  left:30%;
-  font-size:100pt
+
+image {
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.border {
+  border: 5px solid #0088ff;
 }
