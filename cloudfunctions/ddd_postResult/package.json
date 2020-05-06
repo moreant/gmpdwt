@@ -1,5 +1,5 @@
 {
-  "name": "httpRequest",
+  "name": "ddd_postResult",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -9,7 +9,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.19.2",
     "wx-server-sdk": "~1.8.3"
   }
 }

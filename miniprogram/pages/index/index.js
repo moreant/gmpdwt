@@ -1,164 +1,117 @@
-const db = wx.cloud.database()
-const candidates = db.collection('candidates')
-
 Page({
   data: {
-    candidateList: [], //候选人数组
-    index: 0,
-    posted: false //已投票状态
+    ques: null,
+    pos: 0,
+    quesnum: 5,
+    score: 0,
+    total: 0
   },
 
-
-  //页面加载生命周期回调
-  onLoad: async function (options) {
-    wx.showLoading({
-      title: '加载中',
-      mask: true
-    })
-    //调用云函数posted获取是否投过票
-    const posted = await wx.cloud.callFunction({
-      name: 'posted'
+  onLoad: function (options) {
+    wx.cloud.callFunction({
+      name: "ddd_getQuestion"
     }).then(res => {
-      return res.result[0] || ''
+      // console.log(res.result)
+      res = res.result.map(val => {
+        let result = {}
+        let arr = [true, false];
+        //Lang=true 题干是中文
+        result.lang = arr[Math.floor(Math.random() * arr.length)];
+        result.ques = val[0]
+        val = val.sort(() => { return .5 - Math.random() })
+        val = val.map((val, index) => {
+          val.index = index
+          val.checked = false
+          return val
+        })
+        result.choice = val
+        return result
+      })
+      this.setData({
+        ques: res
+      })
     })
-    /** @type {Array} */
-    const candidateList = (await candidates.get()).data
-    // 如果带了fileID参数
-    let index = 0
-    if (options.fileID) {
-      const { fileID } = options
-      index = candidateList.findIndex(item => item.fileID === fileID)
+  },
+  radioChange: function (e) {
+    let lques = this.data.ques
+    lques[this.data.pos].answer = e.detail.value
+    for (let i = 0; i < this.data.quesnum; i++) {
+      lques[this.data.pos].choice[i].checked = false
+      if (lques[this.data.pos].lang) {
+        if (lques[this.data.pos].choice[i].en == e.detail.value) {
+          lques[this.data.pos].choice[i].checked = true
+          console.log('en choice ')
+        }
+      } else {
+        if (lques[this.data.pos].choice[i].cn == e.detail.value) {
+          lques[this.data.pos].choice[i].checked = true
+          console.log('cn choice ')
+        }
+      }
     }
-    // 如果投了票
-    if (posted) {
-      const index = candidateList.findIndex(item => item.fileID === posted.fileID)
-      candidateList[index].class = 'border'
-    }
-
     this.setData({
-      candidateList,
-      posted,
-      index
-    })
-    // 刷新标题栏
-    this.schange({
-      detail: {
-        current: index
-      }
-    })
-    wx.hideLoading({})
-  },
-
-  async schange(res) {
-    const { current } = res.detail
-    const { candidateList } = this.data
-    const vote = candidateList[current].vote || 0
-    this.data.swiperCurrent = current
-    //设置标题栏内容
-    wx.setNavigationBarTitle({
-      title: `莫奕基 ${current + 1} / ${candidateList.length} 票数：${vote}`
+      ques: lques
     })
   },
-
-
-  async tap(e) {
-    if (this.data.posted) {
-      const { _id, fileID } = this.data.posted
-      const { confirm } = await wx.showModal({
-        title: '您已投票',
-        content: '是否取消上次投票',
+  pre: function (e) {
+    if (this.data.pos > 0) {
+      this.setData({
+        pos: this.data.pos - 1
       })
-      if (confirm) {
-        const updated = await wx.cloud.callFunction({
-          name: 'removePost',
-          data: {
-            _id,
-            fileID
-          }
-        }).then(res => {
-          return res.result
-        })
-        if (updated === 1) {
-          this.relaunch()
-        } else {
-          wx.showToast({ title: '取消失败', })
-        }
-      }
-    } else {
-      const { confirm } = await wx.showModal({
-        title: '投票确认',
-        content: '确定投这件作品吗？',
-      })
-      if (confirm) {
-        const { fileid, index } = e.currentTarget.dataset
-        wx.showLoading({
-          title: '投票中',
-        })
-        const updated = await wx.cloud.callFunction({
-          name: 'post',
-          data: {
-            fileID: fileid
-          }
-        }).then(res => {
-          return res.result.updated
-        })
-        if (updated === 1) {
-          this.data.candidateList[index].vote++
-          this.schange({
-            detail: {
-              current: index
-            }
-          })
-          this.relaunch()
-        } else {
-          wx.showToast({
-            title: '投票失败',
-          })
-        }
-      }
     }
   },
-
-  /**
-   * 统一重加载方法
-   * @param {String} param 重加载参数
-   */
-  relaunch(param = '') {
-    wx.reLaunch({
-      url: '/' + getCurrentPages()[0].route + param
-    })
+  next: function (e) {
+    console.log(this.data.pos)
+    if (this.data.pos < this.data.quesnum - 1) {
+      this.setData({
+        pos: this.data.pos + 1
+      })
+    }
   },
-
-  async long(e) {
-    /** @type {WechatMiniprogram.ChooseImageSuccessCallbackResult} */
-    const tempFilePaths = await wx.chooseImage({
-      count: 1,
-    }).then(res => {
-      return res.tempFilePaths
-    })
-    const extName = (/\.(\w+)$/.exec(tempFilePaths[0]))[0]
-    wx.showLoading({
-      title: '上传中',
-      mask: true
-    })
-    const fileID = await wx.cloud.uploadFile({
-      cloudPath: +new Date() + extName,
-      filePath: tempFilePaths[0]
-    }).then(res => {
-      return res.fileID
-    })
-    wx.showLoading({
-      title: '保存中',
-      mask: true
-    })
-    await wx.cloud.callFunction({
-      name: 'addCandidate',
-      data: {
-        fileID
+  postResult: function (e) {
+    //计算成绩
+    let score = 0;
+    for (let i = 0; i < this.data.quesnum; i++) {
+      console.log(this.data.ques[i].ques.answer)
+      console.log(this.data.ques[i].ques.en)
+      console.log(this.data.ques[i].ques.cn)
+      if (this.data.ques[i].lang) {
+        if (this.data.ques[i].answer == this.data.ques[i].ques.en)
+          score++
+      } else {
+        if (this.data.ques[i].answer == this.data.ques[i].ques.cn)
+          score++
       }
-    })
-    const param = '?fileID=' + fileID
-    this.relaunch(param)
-  }
+    }
 
+    let result = {}
+    result.test = this.data.ques
+    result.score = score
+
+    result.type = 0
+    console.log(result)
+    if (!this.data.submited) {
+      wx.cloud.callFunction({
+        name: "ddd_postResult",
+        data: result
+      })
+        .then(res => {
+          console.log(res)
+          this.setData({
+            total: res.result.score
+          })
+        })
+      this.setData({
+        submited: true,
+        score: score
+      })
+    } else {
+      this.onLoad()
+      this.setData({
+        submited: false,
+        ques: null,
+        pos: 0
+      })
+    }
+  }
 })

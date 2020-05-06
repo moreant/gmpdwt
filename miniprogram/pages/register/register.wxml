@@ -1,0 +1,9 @@
+<view class="title">请绑定你的信息</view>
+<form bindsubmit="submit">
+  <van-cell-group>
+    <van-field name="sn" placeholder="8位学号"></van-field>
+    <van-field name="name" placeholder="姓名"> </van-field>
+  </van-cell-group>
+  <view class="mt"></view>
+  <button form-type="submit" type="primary">绑定</button>
+</form>
