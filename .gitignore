@@ -13,7 +13,3 @@ $RECYCLE.BIN/
 # Node.js
 node_modules/
 miniprogram_npm/
-
-
-# 隐藏敏感信息
-/project.config.json

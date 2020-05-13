@@ -1,0 +1,35 @@
+<image class="bg" src="/images/bj_2.png"></image>
+<view class="content">
+  <view>
+    <input
+      id="name"
+      bindblur="nameChange"
+      placeholder-class="phcolor"
+      placeholder="输入您的姓名"
+      bindinput="bindKeyInput"
+    />
+  </view>
+  <view>
+    <input
+      id="phone"
+      bindblur="phoneChange"
+      placeholder-class="phcolor"
+      placeholder="输入您的手机号码"
+      bindinput="bindKeyInput"
+    />
+  </view>
+  <view>
+    <picker id="num" bindchange="bindKeyInput" value="{{ picker.index }}" range="{{ picker.arr }}">
+      参加婚礼人数：{{ picker.arr[picker.index] }}</picker
+    >
+  </view>
+  <view>
+    <input
+      id="wish"
+      placeholder-class="phcolor"
+      placeholder="输入您的祝福语"
+      bindinput="bindKeyInput"
+    />
+  </view>
+  <button bindtap="subscribe">提交</button>
+</view>

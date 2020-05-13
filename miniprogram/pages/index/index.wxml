@@ -1,37 +1,39 @@
-<view class="num">{{pos+1}} / 5  </view>
-<block wx:if="{{ques[pos].lang}}" >
-  <view>{{ques[pos].ques.cn}}</view>
-  <radio-group class="radio-group" bindchange="radioChange">
-    <block wx:for="{{ques[pos].choice}}" wx:key="unique">
-      <label class="{{submited&&ques[pos].ques.en==item.en?'radioRight':'radio'}}" >
-        <radio value="{{item.en}}" checked="{{item.checked}}" disabled="{{submited}}"/>
-        {{item.en}}
-      </label>
-    </block>
-  </radio-group>
-</block>
-<block wx:else>
-  <view>{{ques[pos].ques.en}}</view>
-  <radio-group class="radio-group" bindchange="radioChange">
-    <block wx:for="{{ques[pos].choice}}" wx:key="unique">
-      <label class="{{submited&&ques[pos].ques.cn==item.cn?'radioRight':'radio'}}" >
-        <radio value="{{item.cn}}" checked="{{item.checked}}" disabled="{{submited}}"/>
-        {{item.cn}}
-      </label>
-    </block>
-  </radio-group>
-</block>
-<view>　</view>
-<view wx:if="{{submited}}" class="{{ques[pos].answer==(ques[pos].lang?ques[pos].ques.en:ques[pos].ques.cn)?'Right':'Wrong'}}">
-{{ques[pos].answer}}
-   正确答案：{{ques[pos].lang?ques[pos].ques.en:ques[pos].ques.cn}}
+<view class="player player-{{isPlayingMusic ? 'play' : 'pause'}}" bindtap="play">
+  <image src="/images/music_icon.png" />
+  <image src="/images/music_play.png" />
 </view>
-<button type='primary' bind:tap="pre">前一题</button> 
-<view>　</view>
-<button type='primary' bind:tap="next">后一题</button>
-<view wx:if="{{submited}}" class="num">
-{{"这波得分:"+score+"分"}}
-{{"累计得分:"+total+"分"}}
-<navigator url="../rank/rank">查看排行榜</navigator> </view>
-<text>\n</text>
-<button class="submitbtn" type='primary' bind:tap="postResult">{{submited ? '再来一波' : '提交'}}</button>
+<!-- 背景图片 -->
+<image class="bg" src="/images/bg_1.png" />
+<!-- 内容区域 -->
+<view class="content">
+  <!-- 顶部GIF图片 -->
+  <image class="content-gif" src="/images/save_the_date.gif" />
+  <!-- 标题 -->
+  <view class="content-title">邀请函</view>
+  <!-- 新郎和新娘的合照 -->
+  <view class="content-avatar">
+    <image src="/images/avatar.png" />
+  </view>
+  <!-- 新娘和新郎的名字 -->
+  <view class="content-info">
+    <view class="content-name" bindtap="callGroom">
+      <image src="/images/tel.png" />
+      <view>王辉辉</view>
+      <view>新郎</view>
+    </view>
+    <view class="content-wedding">
+      <image src="/images/wedding.png"></image>
+    </view>
+    <view class="content-name" bindtap="callBride">
+      <image src="/images/tel.png" />
+      <view>张琳琳</view>
+      <view>新娘</view>
+    </view>
+  </view>
+  <!-- 婚礼信息 -->
+  <view class="content-address">
+    <view>我们诚邀您来参加我们的婚礼</view>
+    <view>时间：2020年5月13日</view>
+    <view>地点：广州市白云区马沥大酒店</view>
+  </view>
+</view>

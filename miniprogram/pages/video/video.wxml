@@ -1,0 +1,5 @@
+<view class="video-list" wx:for="{{movieList}}" wx:key="unique">
+<view class="video-title">{{item.title}}</view>
+<view class="video-time">时间:{{item.create_time}}</view>
+<video src="{{item.src}}" objectFit="fill"></video>
+</view>
