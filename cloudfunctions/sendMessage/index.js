@@ -16,17 +16,22 @@ exports.main = async (event, context) => {
   today = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate()
 
   let messages = await wedding.where({
-    "date2.value": today
+    "date": today
   }).get()
   console.log(messages)
   let result = []
   for (v of messages.data) {
-    res = await cloud.openapi.subscribeMessage.send({
-      touser: v._openid,
-      page: '/page/index',
-      data: v,
-      templateId: v.templateID
-    })
+    try {
+      res = await cloud.openapi.subscribeMessage.send({
+        touser: v.OPENID,
+        page: '/page/index',
+        data: v,
+        templateId: v.templateID
+      })
+    } catch (e) {
+      await wedding.doc(v._id).remove()
+      throw e
+    }
     await wedding.doc(v._id).remove()
     // console.log(res)
     result.push(res)

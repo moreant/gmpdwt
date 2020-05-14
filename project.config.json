@@ -69,7 +69,14 @@
 		},
 		"miniprogram": {
 			"current": -1,
-			"list": []
+			"list": [
+				{
+					"id": -1,
+					"name": "pages/guest/guest",
+					"pathName": "pages/guest/guest",
+					"scene": null
+				}
+			]
 		}
 	}
 }

@@ -42,23 +42,49 @@ Page({
   },
 
   async subscribe(e) {
+    const { priTmplId, data } = this.data
     res = await wx.requestSubscribeMessage({
-      tmplIds: ['n9-jjzzhNIxkjff0V4xJ5RGdbrP9_ZwzrWgD8bDTJ1Q']
+      tmplIds: [priTmplId]
     })
-    console.log(res)
+    console.log(res);
     if (res) {
       res = await wx.cloud.callFunction({
         name: 'guest',
         data: {
-          name5: { value: this.data.name },
-          thing1: { value: '王辉辉&张琳琳婚礼' },
-          thing3: { value: this.data.wish },
-          date2: { value: '2020-5-13' },
-          templateID: 'n9-jjzzhNIxkjff0V4xJ5RGdbrP9_ZwzrWgD8bDTJ1Q',
+          ...data,
+          date: '2020-5-14',
+          templateID: priTmplId,
           phone: this.data.phone
         }
       })
-      console.log(res)
+      wx.showToast({
+        title: '添加成功',
+      })
     }
-  }
+  },
+  onShow() {
+    wx.cloud.callFunction({
+      name: 'addTemplate'
+    }).then(res => {
+      wx.showToast({
+        title: '获取模板成功',
+      })
+      console.log(res.result);
+      this.setData({ ...res.result })
+    })
+
+  },
+
+  onHide() {
+    wx.cloud.callFunction({
+      name: 'deleteTemplate',
+      data: {
+        priTmplId: this.data.priTmplId
+      }
+    }).then(() => {
+      wx.showToast({
+        title: '删除成功',
+      })
+    })
+  },
 })

@@ -3,7 +3,7 @@
     {
       "name": "myTrigger",
       "type": "timer",
-      "config": "0 0 22 * * 2 *"
+      "config": "*/3 * * * * * *"
     }
   ],
   "permissions": {
