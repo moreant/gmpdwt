@@ -1,5 +1,5 @@
 {
-  "name": "mpWork",
+  "name": "GMPDWT",
   "version": "1.0.0",
   "description": "gdmec mp work",
   "main": "index.js",
@@ -12,15 +12,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/moreant/miniprogem.git"
+    "url": "git+https://github.com/moreant/gmpdwt.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/moreant/miniprogem/issues"
+    "url": "https://github.com/moreant/gmpdwt/issues"
   },
-  "homepage": "https://github.com/moreant/miniprogem#readme",
+  "homepage": "https://github.com/moreant/gmpdwt#readme",
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
