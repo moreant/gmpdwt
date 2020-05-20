@@ -1,0 +1,8 @@
+<view>学号:{{ student.sn }} 姓名:{{ student.name }} 成绩:{{ student.total }}</view>
+<view wx:for="{{ student.target }}" wx:key="*this">
+  <picker data-id="{{ index }}" mode="selector" range="{{ target }}" bindchange="change">
+    第{{ index + 1 }}志愿：{{ item }}</picker
+  >
+</view>
+<button bindtap="post">提交志愿</button>
+<!-- <button bindtap="reset">清空志愿</button> -->

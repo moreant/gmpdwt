@@ -1,0 +1,10 @@
+<button open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取微信信息</button>
+<form bind:submit="formsubmit">
+  <input name="nickName" placeholder="微信昵称" value="{{nickName}}" />
+  <image name="avatarUrl" src="{{avatarUrl}}" style="width:50px;height:50px;" />
+  <view>请输入你的8位学号和姓名</view>
+  <!-- 07190527 刘梦真 -->
+  <input name="sn" placeholder='8位学号' />
+  <input name='name' placeholder='姓名' />
+  <button form-type='submit'>绑定微信账号</button>
+</form>

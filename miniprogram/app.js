@@ -3,7 +3,8 @@ App({
     wx.cloud.init({
       env: 'sc-t3cwb',
       traceUser: true
-    })
+    })   
+
   },
   globalData: {
 

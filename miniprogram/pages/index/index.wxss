@@ -1,0 +1,11 @@
+page {
+  display: flex;
+  align-items: center;
+  justify-content: center;/*水平居中*/
+  height: 100%;
+  width: 100%;
+}
+
+.loading {
+  font-size: 2em;
+}
