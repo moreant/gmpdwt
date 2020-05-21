@@ -1,4 +1,5 @@
 <view class="page" data-weui-theme="{{ theme }}">
+  <mp-toptips msg="{{ error }}" type="error" show="{{ error  }}"></mp-toptips>
   <view class="weui-form">
     <view class="weui-form__text-area">
       <h2 class="weui-form__title">绑定信息</h2>

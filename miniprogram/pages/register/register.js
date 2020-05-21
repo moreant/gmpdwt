@@ -3,14 +3,11 @@ Page({
     nickName: '',
     avatarUrl: '',
     name: '',
-    sn: ''
+    sn: '',
+    error: ''
   },
 
-  async submit(e) {
-    wx.showLoading({
-      title: '提交中',
-      mask: true
-    })
+  async submit(e) {  
     console.log("???");
     const {
       sn,
@@ -26,8 +23,12 @@ Page({
       if (!/\d{8}/.test(sn)) {
         throw '请输入8位学号'
       }
+      wx.showLoading({
+        title: '提交中',
+        mask: true
+      })
       this.register(sn, name)
-        .catch(e => {          
+        .catch(e => {
           wx.hideLoading()
           wx.showModal({
             title: '发生错误',
@@ -36,10 +37,12 @@ Page({
           })
         })
     } catch (e) {
-      wx.showToast({
-        title: e,
-        icon: 'none'
+      wx.hideLoading()      
+      this.setData({
+        error: e
       })
+      // 暴露给日志系统
+      throw e
     }
   },
 
