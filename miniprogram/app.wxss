@@ -1,0 +1,13 @@
+@import './style/weui.wxss';
+
+page {
+  height: 100%
+}
+
+.page {
+  height: 100%;
+  min-height: 100%;
+  color: var(--weui-FG-0);
+  font-size: 16px;
+  font-family: -apple-system-font, Helvetica Neue, Helvetica, sans-serif
+}

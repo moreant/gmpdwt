@@ -19,14 +19,14 @@ Page({
       })
     if (res.stats.updated === 1) {
       wx.redirectTo({
-        url: '/pages/profile/profile',
+        url: '/pages/index/index',
       })
     } else {
 
     }
   },
 
-  reset() {
+  clear() {
     this.init()
   },
 
@@ -61,9 +61,9 @@ Page({
 
   onLoad(options) {
     const student = wx.getStorageSync('student')
-    if (student.target) {
+    if (student.target && !options.revise) {
       wx.redirectTo({
-        url: '/pages/profile/profile',
+        url: '/pages/index/index',
       })
     }
     this.init()

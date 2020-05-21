@@ -1,1 +1,40 @@
-<view class="loading">初始化中...</view>
+<view>
+  <van-tabs swipeable custom-class="tab" sticky animated>
+    <van-tab wx:for="{{ list }}" wx:key="_id" title="{{ item._id }}" custom-class="tab_item">
+      <van-cell value="分数" title="排名" title-class="center" value-class="center"> </van-cell>
+      <van-cell
+        wx:for="{{ item.students }}"
+        wx:key="_id"
+        value="{{ item.total }}"
+        title-class="center"
+        value-class="center"
+      >
+        <view slot="title">
+          <view class="van-cell-text">{{ index + 1 }}</view>
+          <!-- <van-tag type="danger">标签</van-tag> -->
+        </view>
+      </van-cell>
+      <view class="weui-loadmore weui-loadmore_line">
+        <text class="weui-loadmore__tips">到底了哟</text>
+      </view>
+    </van-tab>
+  </van-tabs>
+</view>
+
+<view class="bg-c"></view>
+
+<view class="bt">
+  <van-cell
+    center
+    title="{{ student.name || '姓名' }}"
+    value="{{ student.total || '-' }}"
+    label="当前分班：{{ student.target[0] || '查询中' }}"
+    title-class="center"
+    value-class="center"
+    label-class="center red"
+  ></van-cell>
+  <view class="btn-grop">
+    <view class="weui-btn weui-btn_primary btn" bind:tap="makeClass">分班预览</view>
+    <view class="weui-btn weui-btn_default btn">修改志愿</view>
+  </view>
+</view>

@@ -2,13 +2,20 @@ Page({
   data: {
     nickName: '',
     avatarUrl: '',
+    name: '',
+    sn: ''
   },
 
-  async formsubmit(e) {
+  async submit(e) {
+    wx.showLoading({
+      title: '提交中',
+      mask: true
+    })
+    console.log("???");
     const {
       sn,
       name
-    } = e.detail.value
+    } = this.data
     try {
       if (!this.data.nickName) {
         throw '请获取微信信息'
@@ -20,7 +27,8 @@ Page({
         throw '请输入8位学号'
       }
       this.register(sn, name)
-        .catch(e => {
+        .catch(e => {          
+          wx.hideLoading()
           wx.showModal({
             title: '发生错误',
             content: e,
@@ -40,7 +48,6 @@ Page({
   },
 
   async register(sn, name) {
-    console.log(sn, name);
     const { nickName, avatarUrl, _openid } = this.data
     const students = wx.cloud.database().collection('test')
     let student = (await students
@@ -74,6 +81,12 @@ Page({
   },
 
   onLoad() {
+    wx.getUserInfo({
+      success: res => {
+        this.setData({ ...res.userInfo })
+      }
+    })
+
     wx.cloud.callFunction({
       name: 'openid'
     }).then(res => this.data._openid = res.result.openid)

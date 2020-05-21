@@ -1,9 +1,8 @@
 {
   "pages": [
     "pages/index/index",
-    "pages/profile/profile",
-    "pages/rank/rank",
-    "pages/register/register"    
+    "pages/register/register",
+    "pages/rank/rank"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -18,12 +17,11 @@
     }
   },
   "usingComponents": {
-    "van-field": "@vant/weapp/field/index",
     "van-cell": "@vant/weapp/cell/index",
     "van-cell-group": "@vant/weapp/cell-group/index",
-    "van-tag": "@vant/weapp/tag/index",
-    "van-transition": "@vant/weapp/transition/index",
-    "van-loading": "@vant/weapp/loading/index"
+    "van-tab": "@vant/weapp/tab/index",
+    "van-tabs": "@vant/weapp/tabs/index",
+    "van-tag": "@vant/weapp/tag/index"
   },
   "sitemapLocation": "sitemap.json",
   "style": "v2"

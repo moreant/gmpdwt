@@ -1,10 +1,86 @@
-<button open-type="getUserInfo" bindgetuserinfo="getUserInfo"> 获取微信信息</button>
-<form bind:submit="formsubmit">
-  <input name="nickName" placeholder="微信昵称" value="{{nickName}}" />
-  <image name="avatarUrl" src="{{avatarUrl}}" style="width:50px;height:50px;" />
-  <view>请输入你的8位学号和姓名</view>
-  <!-- 07190527 刘梦真 -->
-  <input name="sn" placeholder='8位学号' />
-  <input name='name' placeholder='姓名' />
-  <button form-type='submit'>绑定微信账号</button>
-</form>
+<view class="page" data-weui-theme="{{ theme }}">
+  <view class="weui-form">
+    <view class="weui-form__text-area">
+      <h2 class="weui-form__title">绑定信息</h2>
+      <!-- <view class="weui-form__desc"
+        >请填写真实信息</view
+      > -->
+    </view>
+    <view class="wxInfo">
+      <view class="weui-cells__title">微信信息</view>
+      <view class="weui-panel weui-panel_access">
+        <view wx:if="{{ nickName }}" class="weui-panel__bd">
+          <view class="weui-media-box weui-media-box_appmsg">
+            <view class="weui-media-box__hd">
+              <image class="weui-media-box__thumb" src="{{ avatarUrl }}" alt></image>
+            </view>
+            <view class="weui-media-box__bd">
+              <h4 class="weui-media-box__title">{{ nickName }}</h4>
+            </view>
+          </view>
+        </view>
+        <view wx:else class="weui-panel__ft">
+          <view class="weui-cell">
+            <button
+              type="primary"
+              open-type="getUserInfo"
+              lang="zh_CN"
+              bindgetuserinfo="getUserInfo"
+              class="weui-cell__bd"
+            >
+              登录授权
+            </button>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-form__control-area">
+      <view class="weui-cells__group weui-cells__group_form">
+        <view class="weui-cells__title">学生信息</view>
+        <view class="weui-cells weui-cells_form">
+          <view class="weui-cell weui-cell_active">
+            <view class="weui-cell__hd">
+              <label class="weui-label">学号</label>
+            </view>
+            <view class="weui-cell__bd">
+              <!-- 不知道为什么输入时会有警告，不过不影响使用 -->
+              <input
+                class="weui-input"
+                model:value="{{ sn }}"
+                placeholder="请填写八位学号"
+                type="number"
+                placeholder-class="weui-input__placeholder"
+              />
+            </view>
+          </view>
+          <view class="weui-cell weui-cell_active">
+            <view class="weui-cell__hd">
+              <label class="weui-label">姓名</label>
+            </view>
+            <view class="weui-cell__bd">
+              <input
+                model:value="{{ name }}"
+                class="weui-input"
+                placeholder="请填写姓名"
+                placeholder-class="weui-input__placeholder"
+              />
+            </view>
+          </view>
+        </view>
+      </view>
+    </view>
+    <view class="weui-form__tips-area">
+      <view class="weui-form__tips">
+        请确认填写无误
+      </view>
+    </view>
+    <view class="weui-form__opr-area">
+      <view type="primary" class="weui-btn weui-btn_primary" bind:tap="submit">确定</view>
+    </view>
+    <!-- <view class="weui-form__tips-area">
+      <view class="weui-form__tips">
+        表单页提示，居中对齐
+      </view>
+    </view>     -->
+  </view>
+</view>

@@ -1,75 +1,72 @@
-// pages/index/index.js
+const db = wx.cloud.database()
+const $ = db.command.aggregate
+
 Page({
-
-  /**
-   * 页面的初始数据
-   */
   data: {
-
+    tab: 0,
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
-  onLoad: function (options) {
+  // 页面切换
+  changeItem: function (e) {
+    this.setData({
+      item: e.target.dataset.item
+    })
   },
-
-  /**
-   * 生命周期函数--监听页面初次渲染完成
-   */
-  onReady: function () {
-
+  // tab切换
+  changeTab: function (e) {
+    this.setData({
+      tab: e.detail.current
+    })
   },
-
-  /**
-   * 生命周期函数--监听页面显示
-   */
-  onShow: async function () {
-    const students = wx.cloud.database().collection('test')
-    const student = (await students
-      .where({
-        _openid: '{openid}'
-      })
-      .get()).data[0]
-    const pages = student ? 'rank' : 'register'
-    wx.setStorageSync('student', student)
+  rank(res) {
     wx.redirectTo({
-      url: `/pages/${pages}/${pages}`,
+      url: '/pages/rank/rank',
     })
   },
 
-  /**
-   * 生命周期函数--监听页面隐藏
-   */
-  onHide: function () {
+  async onLoad(options) {
+    const student = (await db.collection("test").where({
+      _openid: '{openid}'
+    }).get()).data[0]
+    if (!student) {
+      wx.redirectTo({
+        url: '/pages/register/register',
+      })
+    } else {
+      wx.setStorageSync('student', student)
+    }
 
-  },
-
-  /**
-   * 生命周期函数--监听页面卸载
-   */
-  onUnload: function () {
-
-  },
-
-  /**
-   * 页面相关事件处理函数--监听用户下拉动作
-   */
-  onPullDownRefresh: function () {
-
-  },
-
-  /**
-   * 页面上拉触底事件的处理函数
-   */
-  onReachBottom: function () {
-
-  },
-
-  /**
-   * 用户点击右上角分享
-   */
-  onShareAppMessage: function () {
+    const list = (await db.collection('test')
+      .aggregate()
+      .unwind({
+        path: '$target',
+        includeArrayIndex: 'index'
+      })
+      .match({
+        index: 0
+      })
+      .sort({
+        total: -1
+      })
+      .group({
+        _id: "$target",
+        students: $.push({
+          _id: "$_id",
+          total: "$total"
+        }),
+      })
+      .end()).list
+    console.log(list);
+    // list.forEach(cInfo => {
+    //   cInfo.students.unshift({
+    //     name: "排名",
+    //     total: "分数"
+    //   })
+    // })
+    this.setData({
+      student,
+      list
+    })
 
   }
 })
