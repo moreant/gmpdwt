@@ -25,7 +25,7 @@ Page({
    * 生命周期函数--监听页面显示
    */
   onShow: async function () {
-    const students = wx.cloud.database().collection('pc_students')
+    const students = wx.cloud.database().collection('test')
     const student = (await students
       .where({
         _openid: '{openid}'

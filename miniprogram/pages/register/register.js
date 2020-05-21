@@ -42,7 +42,7 @@ Page({
   async register(sn, name) {
     console.log(sn, name);
     const { nickName, avatarUrl, _openid } = this.data
-    const students = wx.cloud.database().collection('pc_students')
+    const students = wx.cloud.database().collection('test')
     let student = (await students
       .where({
         sn,

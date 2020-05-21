@@ -25,9 +25,9 @@ Page({
     })
   },
 
-  async onLoad(options) {
+  async onLoad(options) {   
     const student = wx.getStorageSync('student')
-    const list = (await db.collection('pc_students')
+    const list = (await db.collection('test')
       .aggregate()
       .unwind({
         path: '$target',
@@ -41,12 +41,18 @@ Page({
       })
       .group({
         _id: "$target",
-        course: $.push({
+        students: $.push({
           _id: "$_id",
           total: "$total"
         }),
       })
       .end()).list
+    console.log(list);
+    const second = []
+    list.forEach(item => {
+      second.push(...item.students.slice(15))
+    })
+    console.log(second);
     this.setData({
       student,
       list

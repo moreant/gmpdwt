@@ -15,7 +15,7 @@
     <swiper-item wx:for="{{ list }}" wx:key="_id">
       <scroll-view scroll-y="true" style="height:100%">
         <view>排名--成绩</view>
-        <view wx:for="{{ list[tab].course }}" wx:key="_id"
+        <view wx:for="{{ list[tab].students }}" wx:key="_id"
           >{{ index + 1 }}---{{ item.total }}
         </view>
       </scroll-view>

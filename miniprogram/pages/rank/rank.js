@@ -8,7 +8,7 @@ Page({
 
   async post() {
     let { student: { target } } = this.data
-    const res = await wx.cloud.database().collection('pc_students')
+    const res = await wx.cloud.database().collection('test')
       .where({
         _openid: '{openid}'
       })
@@ -43,7 +43,7 @@ Page({
   },
 
   init() {
-    const student = wx.getStorageSync('student')
+    let student = wx.getStorageSync('student')
     let target = ['web前端', '人工智能', '移动应用', '手机游戏']
     if (student.transcore < 60) {
       if (student.ai) {
@@ -60,6 +60,12 @@ Page({
   },
 
   onLoad(options) {
+    const student = wx.getStorageSync('student')
+    if (student.target) {
+      wx.redirectTo({
+        url: '/pages/profile/profile',
+      })
+    }
     this.init()
   },
 })
