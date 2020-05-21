@@ -1,11 +1,18 @@
-# 1.0.0 (2020-05-17)
+# 1.1.0 (2020-05-21)
+
+
+### Bug Fixes
+
+* lab18 ([fd3c1b1](https://github.com/moreant/gmpdwt/commit/fd3c1b130f320a0788baa8f92087dc4b04c69768))
 
 
 ### Features
 
-* create doc ([9c6502f](https://github.com/moreant/miniprogem/commit/9c6502f3ab33cc9823e5ed505a49368f9add8ae1))
-* lab17 ([6c2cb81](https://github.com/moreant/miniprogem/commit/6c2cb814102b45ddfef5a96b85372cc7814537b7))
-* lab17-c ([a2f1a30](https://github.com/moreant/miniprogem/commit/a2f1a30c41dd94b3accefc5a2619005c8b64c383))
+* create doc ([9c6502f](https://github.com/moreant/gmpdwt/commit/9c6502f3ab33cc9823e5ed505a49368f9add8ae1))
+* lab17 ([6c2cb81](https://github.com/moreant/gmpdwt/commit/6c2cb814102b45ddfef5a96b85372cc7814537b7))
+* lab17-c ([a2f1a30](https://github.com/moreant/gmpdwt/commit/a2f1a30c41dd94b3accefc5a2619005c8b64c383))
+* lab18 ([15102d9](https://github.com/moreant/gmpdwt/commit/15102d96637d507f79c9feb8082e4494897eb4b7))
+* toast change Toptips ([3054fac](https://github.com/moreant/gmpdwt/commit/3054fac2d119ea7578d0140ab92458001d4d927b))
 
 
 
