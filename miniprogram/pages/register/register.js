@@ -3,14 +3,11 @@ Page({
     nickName: '',
     avatarUrl: '',
     name: '',
-    sn: ''
+    sn: '',
+    error: ''
   },
 
-  async submit(e) {
-    wx.showLoading({
-      title: '提交中',
-      mask: true
-    })
+  async submit(e) {  
     console.log("???");
     const {
       sn,
@@ -18,7 +15,7 @@ Page({
     } = this.data
     try {
       if (!this.data.nickName) {
-        throw '请获取微信信息'
+        throw '未授权用户信息'
       }
       if (!sn || !name) {
         throw '请输入学号姓名'
@@ -26,8 +23,12 @@ Page({
       if (!/\d{8}/.test(sn)) {
         throw '请输入8位学号'
       }
+      wx.showLoading({
+        title: '提交中',
+        mask: true
+      })
       this.register(sn, name)
-        .catch(e => {          
+        .catch(e => {
           wx.hideLoading()
           wx.showModal({
             title: '发生错误',
@@ -36,15 +37,18 @@ Page({
           })
         })
     } catch (e) {
-      wx.showToast({
-        title: e,
-        icon: 'none'
+      wx.hideLoading()      
+      this.setData({
+        error: e
       })
+      // 暴露给日志系统
+      throw e
     }
   },
 
   getUserInfo(e) {
     this.setData({ ...e.detail.userInfo })
+    this.submit()
   },
 
   async register(sn, name) {
@@ -81,12 +85,6 @@ Page({
   },
 
   onLoad() {
-    wx.getUserInfo({
-      success: res => {
-        this.setData({ ...res.userInfo })
-      }
-    })
-
     wx.cloud.callFunction({
       name: 'openid'
     }).then(res => this.data._openid = res.result.openid)

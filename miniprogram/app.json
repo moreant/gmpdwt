@@ -11,18 +11,14 @@
     "navigationBarTextStyle": "black"
   },
   "plugins": {
-    "tencentvideo": {
-      "version": "1.3.13",
-      "provider": "wxa75efa648b60994b"
-    }
   },
   "usingComponents": {
+    "van-button": "@vant/weapp/button/index",
     "van-cell": "@vant/weapp/cell/index",
     "van-cell-group": "@vant/weapp/cell-group/index",
     "van-tab": "@vant/weapp/tab/index",
     "van-tabs": "@vant/weapp/tabs/index",
     "van-tag": "@vant/weapp/tag/index"
   },
-  "sitemapLocation": "sitemap.json",
-  "style": "v2"
+  "sitemapLocation": "sitemap.json"
 }

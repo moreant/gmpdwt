@@ -1,0 +1,22 @@
+{
+  "name": "miniprogram",
+  "version": "1.0.0",
+  "description": "小程序主程序",
+  "main": "app.js",
+  "dependencies": {
+    "@vant/weapp": "^1.3.0",
+    "moment": "^2.24.0",
+    "weui-miniprogram": "^1.0.3"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/moreant/gmpdwt.git"
+  },
+  "keywords": [],
+  "author": "yeek",
+  "license": "ISC"
+}

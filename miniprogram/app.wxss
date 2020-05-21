@@ -1,3 +1,7 @@
+button::after {
+  border: none;
+}
+
 @import './style/weui.wxss';
 
 page {

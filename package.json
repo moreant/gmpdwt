@@ -1,6 +1,6 @@
 {
   "name": "GMPDWT",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "gdmec mp work",
   "main": "index.js",
   "dependencies": {},
@@ -8,7 +8,8 @@
     "cz-conventional-changelog": "^3.2.0"
   },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cl": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0"
   },
   "repository": {
     "type": "git",

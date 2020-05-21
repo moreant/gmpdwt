@@ -8,38 +8,15 @@ cloud.init({
 
 // 云函数入口函数
 exports.main = async (event, context) => {
-
+  
   const db = cloud.database()
-  const $ = db.command.aggregate
   const test = db.collection("test")
 
   /**@type {student[]} */
   let postList = (await test
     .limit(1000)
     .orderBy('total', 'desc')
-    .get()).data
-  // .aggregate()
-  // .unwind({
-  //   path: '$target',
-  //   includeArrayIndex: 'index'
-  // })
-  // .sort({
-  //   total: -1
-  // })
-  // .group({
-  //   _id: "$index",
-  //   students: $.push({
-  //     _id: "$_id",
-  //     total: "$total",
-  //     target: "$target"
-  //   })
-  // })
-  // .limit(10000)
-  // .sort({
-  //   _id: 1
-  // })
-  // .end()).list
-  // console.log(list);
+    .get()).data 
 
   /**
    * 学生信息   
@@ -120,7 +97,6 @@ exports.main = async (event, context) => {
     })
     return overPosts
   }
-
 
   // 掉档
   /** @type {student[]} */
