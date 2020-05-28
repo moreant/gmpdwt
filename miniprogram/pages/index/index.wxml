@@ -3,4 +3,6 @@
 <view class="weui-btn weui-btn_primary" bind:tap="three1">3.1</view>
 <view class="weui-btn weui-btn_primary" bind:tap="four1">4.1</view>
 <view class="weui-btn weui-btn_primary" bind:tap="fives1">5.1</view>
+<view class="weui-btn weui-btn_primary" bind:tap="seven1">7.1</view>
+<view class="weui-btn weui-btn_primary" bind:tap="seven2">7.2</view>
 <view class="weui-btn weui-btn_primary">页面主操作</view>

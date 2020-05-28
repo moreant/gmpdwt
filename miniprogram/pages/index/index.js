@@ -106,6 +106,69 @@ Page({
     console.log(list[0].count / list[1].count);
   },
 
+  six1() {
+    const avg = (await oStudents
+      .aggregate()
+      .group({
+        _id: null,
+        avg: $.avg('$score')
+      })
+      .end()).list[0].avg
+    console.log(avg);
+  },
+
+  six2() {
+    const avg = (await oStudents
+      .aggregate()
+      .lookup({
+        from: 'old_students',
+        localField: 'name',
+        foreignField: 'name',
+        as: 'student'
+      })
+      .match({
+        travel: '美国',
+        favorite: '麻婆豆腐',
+        'student.gender': '男'
+      })
+      .count('sn')
+      .end()).list[0].sn
+    console.log(avg);
+  },
+
+  async seven1() {
+    const avg = (await oStudents
+      .aggregate()
+      .match({
+        transcore: _.gt(0)
+      })
+      .group({
+        _id: null,
+        avg: $.avg('$transcore')
+      })
+      .end()).list[0].avg
+    console.log(avg);
+  },
+
+  async seven12() {
+    const count = (await oStudents
+      .aggregate()
+      .lookup({
+        from: 'old_students',
+        localField: 'name',
+        foreignField: 'name',
+        as: 'student'
+      })
+      .match({
+        travel: '印度',
+        color: '蓝色',
+        'student.gender': '男'
+      })
+      .count('sn')
+      .end()).list[0].sn
+    console.log(count);
+  },
+
   onLoad() {
   }
 })
