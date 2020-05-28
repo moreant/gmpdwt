@@ -150,7 +150,7 @@ Page({
     console.log(avg);
   },
 
-  async seven12() {
+  async seven2() {
     const count = (await oStudents
       .aggregate()
       .lookup({
@@ -166,6 +166,36 @@ Page({
       })
       .count('sn')
       .end()).list[0].sn
+    console.log(count);
+  },
+
+  async eight1() {
+    const count = (await oStudents
+      .aggregate()
+      .match({
+        gender: '女'
+      })
+      .unwind({
+        path: '$target',
+        includeArrayIndex: 'index'
+      })
+      .group({
+        _id: "$index",
+        course: $.push({
+          _id: "$_id",
+          gender: "$gender",
+          target: "$target"
+        })
+      })
+      .match({
+        "_id": 0,
+      })
+      .unwind('$course')
+      .replaceRoot({
+        newRoot: '$course'
+      })
+      .sortByCount('$target')
+      .end()).list[0].count
     console.log(count);
   },
 
