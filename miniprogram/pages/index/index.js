@@ -1,72 +1,235 @@
+
 const db = wx.cloud.database()
+const oStudents = db.collection("old_students")
+const lovs = db.collection("loves")
 const $ = db.command.aggregate
 
 Page({
+
   data: {
-    tab: 0,
+
   },
 
-  // 页面切换
-  changeItem: function (e) {
-    this.setData({
-      item: e.target.dataset.item
-    })
-  },
-  // tab切换
-  changeTab: function (e) {
-    this.setData({
-      tab: e.detail.current
-    })
-  },
-  rank(res) {
-    wx.redirectTo({
-      url: '/pages/rank/rank',
-    })
-  },
+  // showModal(title, content) {
+  //   wx.showModal({
+  //     showCancel: false,
+  //     title,
+  //     content: content + ""
+  //   })
+  // },
 
-  async onLoad(options) {
-    const student = (await db.collection("test").where({
-      _openid: '{openid}'
-    }).get()).data[0]
-    if (!student) {
-      wx.redirectTo({
-        url: '/pages/register/register',
-      })
-    } else {
-      wx.setStorageSync('student', student)
-    }
-
-    const list = (await db.collection('test')
+  async one1() {
+    const median = (await oStudents
       .aggregate()
+      // 排名
+      .sort({
+        score: -1
+      })
+      // 求总人数
+      .group({
+        _id: null,
+        count: $.sum(1),
+        students: $.push({
+          score: "$score"
+        })
+      })
+      // 计算中位数
+      .project({
+        _id: 0,
+        // 设中位数下标为index
+        median: $.let({
+          vars: {
+            // 向下取整
+            index: $.floor($.divide(['$count', 2])),
+          },
+          // 找到对应下标的成绩
+          in: $.arrayElemAt(['$students.score', '$$index']),
+        }),
+      })
+      .end()).list[0].median
+    console.log(median);
+    // this.showModal("19的成绩中位数是",median)
+  },
+
+  async tow1() {
+    const res = (await oStudents
+      .aggregate()
+      .sort({
+        score: -1
+      })
+      .limit(10)
+      .end()).list
+    console.log(res);
+  },
+
+  async tow2(){
+    const travel = (await oStudents
+      .aggregate()
+      .unwind({
+        path: '$choosen',
+        includeArrayIndex: 'index'
+      })
+      .match({
+        "choosen": 0,
+        "index": 1
+      })
+      .lookup({
+        from: 'loves',
+        localField: 'name',
+        foreignField: 'name',
+        as: 'favorite'
+      })
+      .group({
+        _id: "$index",
+        course: $.push({
+          _id: "$_id",
+          favorite: '$favorite'
+        })
+      })
+      .unwind('$course')
+      .unwind('$course.favorite')
+      .sortByCount('$course.favorite.travel')
+      .end()).list[0].id
+    console.log(travel);
+  },
+
+  async three1() {
+    const count = (await oStudents
+      .aggregate()
+      .match({
+        "target": [
+          "web前端",
+          "移动应用",
+          "手机游戏"
+        ]
+      })
+      .count("count")
+      .end()).list[0].count
+    console.log(count);
+  },
+
+  async four1() {
+    const maxScore = (await oStudents
+      .aggregate()
+      .sort({
+        score: -1
+      })
+      .match({
+        gender: "女"
+      })
+      .limit(1)
+      .end()).list[0].score
+    console.log(maxScore);
+  },
+
+  async fives1() {
+    const list = (await oStudents
+      .aggregate()
+      .group({
+        _id: '$gender',
+        count: $.sum(1)
+      })
+      .sort({
+        _id: -1
+      })
+      .end()).list
+    console.log(list[0].count / list[1].count);
+  },
+
+  six1() {
+    const avg = (await oStudents
+      .aggregate()
+      .group({
+        _id: null,
+        avg: $.avg('$score')
+      })
+      .end()).list[0].avg
+    console.log(avg);
+  },
+
+  six2() {
+    const avg = (await oStudents
+      .aggregate()
+      .lookup({
+        from: 'old_students',
+        localField: 'name',
+        foreignField: 'name',
+        as: 'student'
+      })
+      .match({
+        travel: '美国',
+        favorite: '麻婆豆腐',
+        'student.gender': '男'
+      })
+      .count('sn')
+      .end()).list[0].sn
+    console.log(avg);
+  },
+
+  async seven1() {
+    const avg = (await oStudents
+      .aggregate()
+      .match({
+        transcore: _.gt(0)
+      })
+      .group({
+        _id: 0,
+        avg: $.avg('$transcore')
+      })
+      .end()
+    ).list[0].avg
+    console.log(avg);
+  },
+
+  async seven2() {
+    const count = (await oStudents
+      .aggregate()
+      .lookup({
+        from: 'old_students',
+        localField: 'name',
+        foreignField: 'name',
+        as: 'student'
+      })
+      .match({
+        travel: '印度',
+        color: '蓝色',
+        'student.gender': '男'
+      })
+      .count('sn')
+      .end()).list[0].sn
+    console.log(count);
+  },
+
+  async eight1() {
+    const count = (await oStudents
+      .aggregate()
+      .match({
+        gender: '女'
+      })
       .unwind({
         path: '$target',
         includeArrayIndex: 'index'
       })
-      .match({
-        index: 0
-      })
-      .sort({
-        total: -1
-      })
       .group({
-        _id: "$target",
-        students: $.push({
+        _id: "$index",
+        course: $.push({
           _id: "$_id",
-          total: "$total"
-        }),
+          gender: "$gender",
+          target: "$target"
+        })
       })
-      .end()).list
-    console.log(list);
-    // list.forEach(cInfo => {
-    //   cInfo.students.unshift({
-    //     name: "排名",
-    //     total: "分数"
-    //   })
-    // })
-    this.setData({
-      student,
-      list
-    })
+      .match({
+        "_id": 0,
+      })
+      .unwind('$course')
+      .replaceRoot({
+        newRoot: '$course'
+      })
+      .sortByCount('$target')
+      .end()).list[0].count
+    console.log(count);
+  },
 
+  onLoad() {
   }
 })
