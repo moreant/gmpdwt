@@ -1,8 +1,6 @@
 {
   "pages": [
-    "pages/index/index",
-    "pages/register/register",
-    "pages/rank/rank"
+    "pages/index/index"
   ],
   "window": {
     "backgroundTextStyle": "light",
@@ -10,15 +8,8 @@
     "navigationBarTitleText": "07180935莫奕基",
     "navigationBarTextStyle": "black"
   },
-  "plugins": {
-  },
-  "usingComponents": {
-    "van-button": "@vant/weapp/button/index",
-    "van-cell": "@vant/weapp/cell/index",
-    "van-cell-group": "@vant/weapp/cell-group/index",
-    "van-tab": "@vant/weapp/tab/index",
-    "van-tabs": "@vant/weapp/tabs/index",
-    "van-tag": "@vant/weapp/tag/index"
+  "plugins": {},
+  "usingComponents": {   
   },
   "sitemapLocation": "sitemap.json"
 }

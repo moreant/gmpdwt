@@ -1,6 +1,0 @@
-{
-  "navigationBarTitleText": "分班志愿填报",
-  "usingComponents": {
-    "mp-toptips": "/miniprogram_npm/weui-miniprogram/toptips/toptips"
-  }
-}
