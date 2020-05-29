@@ -1,5 +1,6 @@
 <view class="weui-btn weui-btn_primary" bind:tap="one1">1.1</view>
 <view class="weui-btn weui-btn_primary" bind:tap="tow1">2.1</view>
+<view class="weui-btn weui-btn_primary" bind:tap="tow1">2.2</view>
 <view class="weui-btn weui-btn_primary" bind:tap="three1">3.1</view>
 <view class="weui-btn weui-btn_primary" bind:tap="four1">4.1</view>
 <view class="weui-btn weui-btn_primary" bind:tap="fives1">5.1</view>

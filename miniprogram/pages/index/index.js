@@ -51,10 +51,6 @@ Page({
     // this.showModal("19的成绩中位数是",median)
   },
 
-  onetow() {
-
-  },
-
   async tow1() {
     const res = (await oStudents
       .aggregate()
@@ -66,15 +62,49 @@ Page({
     console.log(res);
   },
 
+  async tow2(){
+    const travel = (await oStudents
+      .aggregate()
+      .unwind({
+        path: '$choosen',
+        includeArrayIndex: 'index'
+      })
+      .match({
+        "choosen": 0,
+        "index": 1
+      })
+      .lookup({
+        from: 'loves',
+        localField: 'name',
+        foreignField: 'name',
+        as: 'favorite'
+      })
+      .group({
+        _id: "$index",
+        course: $.push({
+          _id: "$_id",
+          favorite: '$favorite'
+        })
+      })
+      .unwind('$course')
+      .unwind('$course.favorite')
+      .sortByCount('$course.favorite.travel')
+      .end()).list[0].id
+    console.log(travel);
+  },
+
   async three1() {
     const count = (await oStudents
-      .where({
+      .aggregate()
+      .match({
         "target": [
           "web前端",
           "移动应用",
           "手机游戏"
-        ],
-      }).count())
+        ]
+      })
+      .count("count")
+      .end()).list[0].count
     console.log(count);
   },
 
@@ -143,10 +173,11 @@ Page({
         transcore: _.gt(0)
       })
       .group({
-        _id: null,
+        _id: 0,
         avg: $.avg('$transcore')
       })
-      .end()).list[0].avg
+      .end()
+    ).list[0].avg
     console.log(avg);
   },
 

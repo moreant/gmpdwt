@@ -45,12 +45,12 @@ exports.main = async (event, context) => {
   //软件选移动应用 6
   proposal.push({
     target: ['web前端', '移动应用', '手机游戏'],
-    choosen: [1, 2, 0]
+    choosen: [1, 0, 2]
   })
   //软件选web前端 7 因为web前端两个班，所以两份。
   proposal.push({
     target: ['web前端', '移动应用', '手机游戏'],
-    choosen: [0, 1, 2]
+    choosen: [0, 2, 1]
   })
   //collection.get() / query.get() 云函数上限100条
   //聚合的结果上限1000条
@@ -88,6 +88,9 @@ exports.main = async (event, context) => {
         })
       } else { //软件选各方向
         let rand = Math.round(Math.random() * 4 + 0.5) + 3 //生成随机数4，5，6，7 
+        if(rand=5){
+          console.log(rand);          
+        }
         let r = await studentCollection.doc(res.list[i]._id).update({
           data: {
             ...proposal[rand]
