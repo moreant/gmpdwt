@@ -9,7 +9,6 @@
     "navigationBarTextStyle": "black"
   },
   "plugins": {},
-  "usingComponents": {   
-  },
+  "usingComponents": {},
   "sitemapLocation": "sitemap.json"
 }

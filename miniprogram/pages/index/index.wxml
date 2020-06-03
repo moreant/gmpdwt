@@ -1,12 +1,17 @@
-<view class="weui-btn weui-btn_primary" bind:tap="one1">1.1</view>
-<view class="weui-btn weui-btn_primary" bind:tap="tow1">2.1</view>
-<view class="weui-btn weui-btn_primary" bind:tap="tow1">2.2</view>
-<view class="weui-btn weui-btn_primary" bind:tap="three1">3.1</view>
-<view class="weui-btn weui-btn_primary" bind:tap="four1">4.1</view>
-<view class="weui-btn weui-btn_primary" bind:tap="fives1">5.1</view>
-<view class="weui-btn weui-btn_primary" bind:tap="six1">6.1</view>
-<view class="weui-btn weui-btn_primary" bind:tap="six2">6.2</view>
-<view class="weui-btn weui-btn_primary" bind:tap="seven1">7.1</view>
-<view class="weui-btn weui-btn_primary" bind:tap="seven2">7.2</view>
-<view class="weui-btn weui-btn_primary" bind:tap="eight1">8.1</view>
-<view class="weui-btn weui-btn_primary">页面主操作</view>
+<view>第7组</view>
+<view>莫奕基，林梓航，鲁涛</view>
+<view>完成情况: {{ memberCount }}/{{ roomLimit }}</view>
+<view
+  >分享来自微信群：<open-data
+    type="groupName"
+    open-gid="{{ groupId }}"
+    default-text="未知"
+  ></open-data
+></view>
+<view>分享的活动ID: {{ activityId || "未生成" }}</view>
+<button class="weui-btn weui-btn_primary" style="margin-top:16px;" open-type="share">
+  转发动态消息
+</button>
+<button class="weui-btn weui-btn_warn" bindtap="end">结束动态消息</button>
+
+<view wx:if="{{ error }}"> 出现错误：{{ error }} </view>
