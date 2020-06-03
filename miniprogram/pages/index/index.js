@@ -1,235 +1,115 @@
 
-const db = wx.cloud.database()
-const oStudents = db.collection("old_students")
-const lovs = db.collection("loves")
-const $ = db.command.aggregate
-
 Page({
 
+  /**
+   * 页面的初始数据
+   */
   data: {
-
+    activityId: '',
+    memberCount: 1,
+    roomLimit: 3,
+    templateInfo: {
+      parameterList: [{
+        name: 'member_count',
+        value: '2'
+      }, {
+        name: 'room_limit',
+        value: '4'
+      }]
+    }
   },
 
-  // showModal(title, content) {
-  //   wx.showModal({
-  //     showCancel: false,
-  //     title,
-  //     content: content + ""
-  //   })
-  // },
-
-  async one1() {
-    const median = (await oStudents
-      .aggregate()
-      // 排名
-      .sort({
-        score: -1
+  onLoad(options) {
+    console.log("options", options);
+    if (JSON.stringify(options) != "{}") {
+      this.setData({
+        activityId: options.activityId,
+        memberCount: Number(options.memberCount) + 1,
+        roomLimit: Number(options.roomLimit)
       })
-      // 求总人数
-      .group({
-        _id: null,
-        count: $.sum(1),
-        students: $.push({
-          score: "$score"
-        })
+      let { activityId, memberCount, roomLimit } = this.data
+      console.log("options.activityId:", activityId);
+      wx.cloud.callFunction({
+        name: "setUpdatableMsgUpdate",
+        data: {
+          activityId, memberCount, roomLimit
+        }
       })
-      // 计算中位数
-      .project({
-        _id: 0,
-        // 设中位数下标为index
-        median: $.let({
-          vars: {
-            // 向下取整
-            index: $.floor($.divide(['$count', 2])),
-          },
-          // 找到对应下标的成绩
-          in: $.arrayElemAt(['$students.score', '$$index']),
-        }),
-      })
-      .end()).list[0].median
-    console.log(median);
-    // this.showModal("19的成绩中位数是",median)
+    }
   },
 
-  async tow1() {
-    const res = (await oStudents
-      .aggregate()
-      .sort({
-        score: -1
+
+  async onShow(e) {
+    const { shareTicket } = getApp().globalData
+    let { activityId, templateInfo, memberCount, roomLimit, } = this.data
+    if (shareTicket) {
+      console.log("shareTicket", shareTicket)
+      const cloudID = (await wx.getShareInfo({
+        shareTicket,
+      })).cloudID
+      console.log("cloudID", cloudID)
+      const groupId = (await wx.cloud.callFunction({
+        name: 'showCloudID',
+        data: {
+          shareData: wx.cloud.CloudID(cloudID)
+        }
+      })).result.shareData.data.openGId
+      this.setData({
+        groupId
       })
-      .limit(10)
-      .end()).list
-    console.log(res);
+    }
+    if (!activityId) {
+      activityId = (await wx.cloud.callFunction({
+        name: 'createActivityId'
+      })).result.activityId
+      console.log("activityId", activityId);
+
+      this.setData({ activityId })
+    }
+    wx.showShareMenu({
+      withShareTicket: true
+    })
+    templateInfo.parameterList[0].value = memberCount + ''
+    templateInfo.parameterList[1].value = roomLimit + ''
+    wx.updateShareMenu({
+      withShareTicket: true,
+      isUpdatableMessage: true,
+      activityId,
+      templateInfo
+    })
   },
 
-  async tow2(){
-    const travel = (await oStudents
-      .aggregate()
-      .unwind({
-        path: '$choosen',
-        includeArrayIndex: 'index'
-      })
-      .match({
-        "choosen": 0,
-        "index": 1
-      })
-      .lookup({
-        from: 'loves',
-        localField: 'name',
-        foreignField: 'name',
-        as: 'favorite'
-      })
-      .group({
-        _id: "$index",
-        course: $.push({
-          _id: "$_id",
-          favorite: '$favorite'
-        })
-      })
-      .unwind('$course')
-      .unwind('$course.favorite')
-      .sortByCount('$course.favorite.travel')
-      .end()).list[0].id
-    console.log(travel);
+  onShareAppMessage(e) {
+    const { activityId, memberCount, roomLimit } = this.data
+    return {
+      title: '动态分享消息',
+      path: '/pages/index/index?activityId=' + activityId +
+        "&memberCount=" + memberCount +
+        "&roomLimit=" + roomLimit
+    }
   },
 
-  async three1() {
-    const count = (await oStudents
-      .aggregate()
-      .match({
-        "target": [
-          "web前端",
-          "移动应用",
-          "手机游戏"
-        ]
+  async end(e) {
+    wx.showLoading({
+      title: '结束中',
+      mask: true
+    })
+    const result = (await wx.cloud.callFunction({
+      name: 'setUpdatableMsgEnd',
+      data: {
+        path: '/pages/index/index',
+        activityId: this.data.activityId
+      }
+    })).result
+    if (result.errCode === 0) {
+      wx.showToast({
+        title: '结束成功',
       })
-      .count("count")
-      .end()).list[0].count
-    console.log(count);
-  },
-
-  async four1() {
-    const maxScore = (await oStudents
-      .aggregate()
-      .sort({
-        score: -1
+    } else {
+      wx.showToast({
+        title: '结束失败' + JSON.stringify(res),
       })
-      .match({
-        gender: "女"
-      })
-      .limit(1)
-      .end()).list[0].score
-    console.log(maxScore);
-  },
-
-  async fives1() {
-    const list = (await oStudents
-      .aggregate()
-      .group({
-        _id: '$gender',
-        count: $.sum(1)
-      })
-      .sort({
-        _id: -1
-      })
-      .end()).list
-    console.log(list[0].count / list[1].count);
-  },
-
-  six1() {
-    const avg = (await oStudents
-      .aggregate()
-      .group({
-        _id: null,
-        avg: $.avg('$score')
-      })
-      .end()).list[0].avg
-    console.log(avg);
-  },
-
-  six2() {
-    const avg = (await oStudents
-      .aggregate()
-      .lookup({
-        from: 'old_students',
-        localField: 'name',
-        foreignField: 'name',
-        as: 'student'
-      })
-      .match({
-        travel: '美国',
-        favorite: '麻婆豆腐',
-        'student.gender': '男'
-      })
-      .count('sn')
-      .end()).list[0].sn
-    console.log(avg);
-  },
-
-  async seven1() {
-    const avg = (await oStudents
-      .aggregate()
-      .match({
-        transcore: _.gt(0)
-      })
-      .group({
-        _id: 0,
-        avg: $.avg('$transcore')
-      })
-      .end()
-    ).list[0].avg
-    console.log(avg);
-  },
-
-  async seven2() {
-    const count = (await oStudents
-      .aggregate()
-      .lookup({
-        from: 'old_students',
-        localField: 'name',
-        foreignField: 'name',
-        as: 'student'
-      })
-      .match({
-        travel: '印度',
-        color: '蓝色',
-        'student.gender': '男'
-      })
-      .count('sn')
-      .end()).list[0].sn
-    console.log(count);
-  },
-
-  async eight1() {
-    const count = (await oStudents
-      .aggregate()
-      .match({
-        gender: '女'
-      })
-      .unwind({
-        path: '$target',
-        includeArrayIndex: 'index'
-      })
-      .group({
-        _id: "$index",
-        course: $.push({
-          _id: "$_id",
-          gender: "$gender",
-          target: "$target"
-        })
-      })
-      .match({
-        "_id": 0,
-      })
-      .unwind('$course')
-      .replaceRoot({
-        newRoot: '$course'
-      })
-      .sortByCount('$target')
-      .end()).list[0].count
-    console.log(count);
-  },
-
-  onLoad() {
+      this.setData({ error: JSON.stringify(result) })
+    }
   }
 })
