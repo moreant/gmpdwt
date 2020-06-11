@@ -11,11 +11,5 @@ App({
   },
 
   onShow(e) {
-    try {
-      this.globalData.shareTicket = e.shareTicket
-      console.log('app onshow ticket:', this.globalData.shareTicket)
-    } catch (e) {
-      console.log(e);
-    }
   }
 })

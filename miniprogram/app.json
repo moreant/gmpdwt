@@ -5,10 +5,11 @@
   "window": {
     "backgroundTextStyle": "light",
     "navigationBarBackgroundColor": "#fff",
-    "navigationBarTitleText": "07180935莫奕基",
+    "navigationBarTitleText": "第七组 莫林鲁",
     "navigationBarTextStyle": "black"
   },
   "plugins": {},
   "usingComponents": {},
-  "sitemapLocation": "sitemap.json"
+  "sitemapLocation": "sitemap.json",
+  "style":"v2"
 }

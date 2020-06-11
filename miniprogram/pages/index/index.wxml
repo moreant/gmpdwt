@@ -1,17 +1,32 @@
-<view>第7组</view>
-<view>莫奕基，林梓航，鲁涛</view>
-<view>完成情况: {{ memberCount }}/{{ roomLimit }}</view>
-<view
-  >分享来自微信群：<open-data
-    type="groupName"
-    open-gid="{{ groupId }}"
-    default-text="未知"
-  ></open-data
-></view>
-<view>分享的活动ID: {{ activityId || "未生成" }}</view>
-<button class="weui-btn weui-btn_primary" style="margin-top:16px;" open-type="share">
-  转发动态消息
-</button>
-<button class="weui-btn weui-btn_warn" bindtap="end">结束动态消息</button>
-
-<view wx:if="{{ error }}"> 出现错误：{{ error }} </view>
+<view class="wrap">
+  <scroll-view scroll-y class="chat" scroll-top="{{scrollTop}}">
+    <view class="list">
+      <view class="chat-news" wx:for="{{list}}" wx:key="unique">
+        <!-- 根据角色判断 -->
+        <block wx:if="{{item.role === 'me'}}">
+          <!-- 自己的消息显示在右侧 -->
+          <view class="news-lf">
+            <text class="new-txt">{{item.msg}}</text>
+            <image class="new-img" src="{{avatarUrl}}"></image>
+          </view>
+        </block>
+        <!-- 对方的消息显示在左侧 -->
+        <block wx:else>
+          <view>
+            <image class="new-img" src="{{item.avatar}}"></image>
+            <text class="new-txt new-text">{{item.msg}}</text>
+          </view>
+        </block>
+      </view>
+    </view>
+  </scroll-view>
+</view>
+<!-- 聊天输入 -->
+<view class="message">
+  <form>
+    <!-- 微信小程序处理软键盘弹出布局上移遮住输入框的解决方法 （设置cursor-spacing="20"）-->
+    <input type="text" cursor-spacing="20" placeholder="请输入聊天内容..." bindinput="bindChange"></input>
+        <button  wx:if="{{nickName}}" type="primary" bindtap="send" formType="reset" size="mini" button-hover="blue">发送</button>
+        <button wx:else type="primary" bindgetuserinfo="userinfo" open-type='getUserInfo' size="mini" >昵称</button>
+  </form>
+</view>

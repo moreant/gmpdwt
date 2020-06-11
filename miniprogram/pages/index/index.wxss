@@ -1,156 +1,98 @@
-/**app.wxss**/
-.container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  box-sizing: border-box;
-} 
-
-button {
-  background: initial;
-}
-
-button:focus{
-  outline: 0;
-}
-
-button::after{
-  border: none;
-}
-
-
 page {
-  background: #f6f6f6;
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
+  background-color: #f7f7f7;
+  height: 100%;
 }
 
-.userinfo, .uploader, .tunnel {
-  margin-top: 40rpx;
-  height: 140rpx;
-  width: 100%;
-  background: #fff;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-left: none;
-  border-right: none;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  transition: all 300ms ease;
-}
-
-.userinfo-avatar {
-  width: 100rpx;
-  height: 100rpx;
-  margin: 20rpx;
-  border-radius: 50%;
-  background-size: cover;
-  background-color: white;
-}
-
-.userinfo-avatar:after {
-  border: none;
-}
-
-.userinfo-nickname {
-  font-size: 32rpx;
-  color: #007aff;
-  background-color: white;
-  background-size: cover;
-}
-
-.userinfo-nickname::after {
-  border: none;
-}
-
-.uploader, .tunnel {
-  height: auto;
-  padding: 0 0 0 40rpx;
-  flex-direction: column;
-  align-items: flex-start;
-  box-sizing: border-box;
-}
-
-.uploader-text, .tunnel-text {
-  width: 100%;
-  line-height: 52px;
-  font-size: 34rpx;
-  color: #007aff;
-}
-
-.uploader-container {
-  width: 100%;
-  height: 400rpx;
-  padding: 20rpx 20rpx 20rpx 0;
-  display: flex;
-  align-content: center;
-  justify-content: center;
-  box-sizing: border-box;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.uploader-image {
-  width: 100%;
-  height: 360rpx;
-}
-
-.tunnel {
-  padding: 0 0 0 40rpx;
-}
-
-.tunnel-text {
-  position: relative;
-  color: #222;
-  display: flex;
-  flex-direction: row;
-  align-content: center;
-  justify-content: space-between;
-  box-sizing: border-box;
-  border-top: 1px solid rgba(0, 0, 0, 0.1);
-}
-
-.tunnel-text:first-child {
-  border-top: none;
-}
-
-.tunnel-switch {
-  position: absolute;
-  right: 20rpx;
-  top: -2rpx;
-}
-
-.disable {
-  color: #888;
-}
-
-.service {
-  position: fixed;
-  right: 40rpx;
-  bottom: 40rpx;
-  width: 140rpx;
-  height: 140rpx;
-  border-radius: 50%;
-  background: linear-gradient(#007aff, #0063ce);
-  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
-  display: flex;
-  align-content: center;
-  justify-content: center;
-  transition: all 300ms ease;
-}
-
-.service-button {
-  position: absolute;
-  top: 40rpx;
-}
-
-.service:active {
-  box-shadow: none;
-}
-
-.request-text {
-  padding: 20rpx 0;
-  font-size: 24rpx;
-  line-height: 36rpx;
+.chat {
+  padding: 5rpx 10rpx;
+  font-size: 14px;
+  line-height: 80rpx;
   word-break: break-all;
+  margin-bottom: 100rpx;
+  box-sizing: border-box;
+}
+
+.wrap {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  border-top: 0px;
+  box-sizing: border-box;
+}
+
+/* 聊天 */
+
+.chat-news {
+  width: 100%;
+  overflow: hidden;
+}
+
+.news-lf {
+  float: right;
+  padding-right: 20rpx;
+}
+
+.chat-news::after {
+  display: block;
+  height: 0;
+  clear: both;
+  content: '';
+}
+
+.new-rl {
+  float: left;
+  padding-left: 20rpx;
+}
+
+.new-img {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 50%;
+  vertical-align: middle;
+  margin-right: 10rpx;
+}
+
+.new-txt {
+  max-width: 300rpx;
+  display: inline-block;
+  border-radius: 6rpx;
+  line-height: 60rpx;
+  background-color: #95d4ff;
+  padding: 5rpx 20rpx;
+  margin: 0 10rpx;
+  margin-left: 50rpx;
+}
+
+.new-text {
+  margin-left: 0;
+  background: lightgreen;
+}
+
+/* 信息输入区域 */
+
+.message {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  height: 102rpx;
+  padding: 10rpx;
+  background-color: #fff;
+  border-top: 2rpx solid #eee;
+  box-sizing: border-box;
+  z-index: 3;
+}
+
+.message input {
+  float: left;
+  width: 76%;
+  height: 100%;
+  line-height: 80rpx;
+  padding: 0 10rpx;
+  font-size: 35rpx;
+  color: #666;
+}
+
+.message button {
+  float: right;
+  font-size: 35rpx;
 }
